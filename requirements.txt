@@ -1,0 +1,10 @@
+tqdm
+einops
+omegaconf
+diffusers
+opencv-python
+pytorch_lightning
+transformers
+matplotlib
+accelerate
+torchvision
