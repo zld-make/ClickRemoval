@@ -32,7 +32,7 @@ if __name__ == "__main__":
     model_path = r"/mnt/nvme0n1/zld/BrushNet_data/ckpt/stable-diffusion-v1-5"
     pipeline = DiffusionPipeline.from_pretrained(
         model_path,
-        custom_pipeline="./pipelines/mypipline1x.py",
+        custom_pipeline="./pipelines/pipline1x.py",
         scheduler=scheduler,
         variant="fp16",
         use_safetensors=True,

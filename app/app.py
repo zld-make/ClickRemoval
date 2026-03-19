@@ -37,15 +37,15 @@ def load_model_pipeline(model_type, model_path):
 
     if model_type == "SDXL":
         from src.stable_diffusion_xl_attention_aggregator import StableDiffusionxlAttentionAggregator
-        custom_pipeline = "./pipelines/mypiplinexl.py"
+        custom_pipeline = "./pipelines/piplinexl.py"
         attn_aggregator = StableDiffusionxlAttentionAggregator(device=device)
     elif model_type == "SD2.1":
         from src.stable_diffusion_2_attention_aggregator import StableDiffusion2AttentionAggregator
-        custom_pipeline = "./pipelines/mypipline2x.py"
+        custom_pipeline = "./pipelines/pipline2x.py"
         attn_aggregator = StableDiffusion2AttentionAggregator(device=device)
     elif model_type == "SD1.5":
         from src.stable_diffusion_1_attention_aggregator import StableDiffusion1AttentionAggregator
-        custom_pipeline = "./pipelines/mypipline1x.py"
+        custom_pipeline = "./pipelines/pipline1x.py"
         attn_aggregator = StableDiffusion1AttentionAggregator(device=device)
     else:
         raise ValueError(f"未知的模型类型: {model_type}")
