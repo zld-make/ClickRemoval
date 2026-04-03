@@ -7,21 +7,15 @@ import os
 import json
 from pathlib import Path
 from src.stable_diffusion_xl_attention_aggregator import StableDiffusionxlAttentionAggregator
-from PIL import Image
+import traceback
 
 if __name__ == "__main__":
-    # Set paths for single image processing
-    image_path = "/home/zld/work/my/data/examples/img/0000b7e1500c94d7.jpg"   # Change to your image path
-    json_path = "/home/zld/work/my/data/examples/coord/0000b7e1500c94d7.json" # Change to your JSON path
+    # single image path
+    image_path = "/root/work/my/examples/img2/002784_input.jpg"
+    coord_path = "/root/work/my/examples/coord2/002784_input.json"
     output_dir = "./out"
 
     os.makedirs(output_dir, exist_ok=True)
-
-    # Check if files exist
-    if not os.path.isfile(image_path):
-        raise FileNotFoundError(f"Image file not found: {image_path}")
-    if not os.path.isfile(json_path):
-        raise FileNotFoundError(f"JSON file not found: {json_path}")
 
     dtype = torch.float16
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
@@ -29,7 +23,7 @@ if __name__ == "__main__":
     scheduler = DDIMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", clip_sample=False,
                               set_alpha_to_one=False)
 
-    model_path = "/mnt/nvme0n1/zld/BrushNet_data/ckpt/stable-diffusion-xl-base-1.0"
+    model_path = "/root/autodl-tmp/stable-diffusion-xl-base-1.0"
     pipeline = DiffusionPipeline.from_pretrained(
         model_path,
         custom_pipeline="./pipelines/piplinexl.py",
@@ -40,29 +34,31 @@ if __name__ == "__main__":
     ).to(device)
 
     def load_coordinates(json_path):
-        with open(json_path, 'r') as f:
-            data = json.load(f)
+        try:
+            with open(json_path, 'r') as f:
+                data = json.load(f)
 
-        points = data.get("points", [])
-        labels = data.get("labels", [])
+            points = data.get("points", [])
+            labels = data.get("labels", [])
 
-        formatted_points = []
-        for point in points:
-            if len(point) == 2:
-                formatted_points.append((point[0], point[1]))
+            formatted_points = []
+            for point in points:
+                if len(point) == 2:
+                    formatted_points.append((point[0], point[1]))
 
-        return formatted_points, labels
-
-    points, labels = load_coordinates(json_path)
-
-    seed = 123  # fixed seed, can be changed
-    generator = torch.Generator(device=device).manual_seed(seed)
+            return formatted_points, labels
+        except Exception as e:
+            print(f"Error loading {json_path}: {e}")
+            return [], []
 
     attn_aggregator = StableDiffusionxlAttentionAggregator(device='cuda:0')
+    points, labels = load_coordinates(coord_path)
+    seed = 123
+    generator = torch.Generator(device=device).manual_seed(seed)
 
     image = pipeline(
         prompt="",
-        image=str(image_path),
+        image=image_path,
         points=points,
         points_in_segment=labels,
         height=1024,
@@ -83,4 +79,7 @@ if __name__ == "__main__":
 
     output_path = Path(output_dir) / f"{Path(image_path).stem}.png"
     image.save(output_path)
-    print(f"Saved output to {output_path}")
+    print(f"Saved result to: {output_path}")
+
+
+    print("Done.")

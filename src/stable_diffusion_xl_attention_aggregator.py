@@ -207,7 +207,7 @@ class StableDiffusionxlAttentionAggregator(object):
         self.torch_dtype = torch_dtype
 
         # Load pipe and setup callbacks
-        local_model_path = "/mnt/nvme0n1/zld/BrushNet_data/ckpt/stable-diffusion-2-1-base"
+        local_model_path = "/root/autodl-tmp/stable-diffusion-2-1-base"
         self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
             local_model_path,
             torch_dtype=torch_dtype,

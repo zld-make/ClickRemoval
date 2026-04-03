@@ -216,11 +216,7 @@ class SGA_SD(AttentionBase):
                     schedule_value = self.tfg_schedule.get_schedule(self.cur_step)
                 else:
                     schedule_value = self.sg_scale
-
-                # background
                 sim_bg = sim + mask_flatten.masked_fill(mask_flatten >= 1, -20)
-
-                # object
                 markov_reshaped = markov_flatten.view(1, 1, -1)  # (1, 1, N)
                 bg_key_mask = (mask_flatten == 0).float().view(1, 1, -1)  # (1, 1, N)
                 suppression_factors = 1 - markov_reshaped * (1 - schedule_value)
@@ -244,7 +240,10 @@ class SGA_SD(AttentionBase):
         """
         if is_cross or self.cur_step not in self.step_idx or self.cur_att_layer // 2 not in self.layer_idx:
             return super().forward(q, k, v, sim, attn, is_cross, place_in_unet, num_heads, **kwargs)
+        # B = q.shape[0] // num_heads // 2
         H = int(np.sqrt(q.shape[1]))
+        # H = W = int(np.sqrt(q.shape[1]))
+        # print(f"H={H}, q.shape={q.shape}")
         if H == 8:
             M = self.mask_8.to(sim.device)
             markov_map = self.markov_map_8.to(sim.device) if hasattr(self, 'markov_map_8') else None
@@ -261,6 +260,8 @@ class SGA_SD(AttentionBase):
             M = self.mask_128.to(sim.device)
             markov_map = self.markov_map_128.to(sim.device) if hasattr(self, 'markov_map_128') else None
 
+
+        # print("SGA begin")
         q_wo, q_w = q.chunk(2)
         k_wo, k_w = k.chunk(2)
         v_wo, v_w = v.chunk(2)
@@ -303,7 +304,6 @@ class SGA_SD(AttentionBase):
 
 
 class TDGSchedule:
-
     def __init__(self, sg_steps, schedule_type="increase", base_scale=1.0):
         self.sg_steps = sg_steps
         self.schedule_type = schedule_type
@@ -339,11 +339,6 @@ class TDGSchedule:
 
     def get_schedule(self, t):
         return self.schedule_cache.get(t, self.base_scale)
-
-    def get_variance_schedule(self, t, covariance_factor=0.5):
-        mean_schedule = self.get_schedule(t)
-        variance_schedule = mean_schedule * covariance_factor
-        return variance_schedule
 
 # Copied from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.rescale_noise_cfg
 def rescale_noise_cfg(noise_cfg, noise_pred_text, guidance_rescale=0.0):
@@ -589,8 +584,8 @@ def prepare_markov_maps(
         points=points,
         points_in_segment=points_in_segment
     )
-    visualize(image, points, segmentation)
-    visualize(image, points, soft_mask)
+    # visualize(image, points, segmentation)
+    # visualize(image, points, soft_mask)
 
     return segmentation, distance_map, soft_mask
 
@@ -685,6 +680,98 @@ def preprocess_image(image_path, device, height=512, width=512):
     image = F.pad(image, (pad_left, pad_right, pad_top, pad_bottom), value=0)
     image = image.to(torch.float16).to(device)
     return image
+
+
+def distance_field_blending_pytorch(original, generated, mask, transition_width=3):
+    """
+    使用PyTorch实现的边缘混合，支持4维张量输入
+
+    Args:
+        original: 原始图像 [B, C, H, W] 或 [C, H, W]
+        generated: 生成图像 [B, C, H, W] 或 [C, H, W]
+        mask: 掩码 [B, 1, H, W] 或 [1, H, W] 或 [H, W]，值为0和1
+        transition_width: 过渡宽度
+    """
+    # 确保输入是PyTorch张量
+    if not isinstance(original, torch.Tensor):
+        original = torch.tensor(original)
+    if not isinstance(generated, torch.Tensor):
+        generated = torch.tensor(generated)
+    if not isinstance(mask, torch.Tensor):
+        mask = torch.tensor(mask)
+
+    # 记录原始设备
+    device = original.device
+
+    # 统一维度为 [B, C, H, W]
+    if original.dim() == 3:
+        original = original.unsqueeze(0)  # [C, H, W] -> [1, C, H, W]
+    if generated.dim() == 3:
+        generated = generated.unsqueeze(0)
+    if mask.dim() == 2:
+        mask = mask.unsqueeze(0).unsqueeze(0)  # [H, W] -> [1, 1, H, W]
+    elif mask.dim() == 3:
+        mask = mask.unsqueeze(1)  # [B, H, W] -> [B, 1, H, W]
+
+    B, C, H, W = original.shape
+    _, _, Hm, Wm = mask.shape
+
+    # 确保掩码与图像尺寸匹配
+    if H != Hm or W != Wm:
+        mask = F.interpolate(mask, size=(H, W), mode='bilinear', align_corners=False)
+
+    # 方法1：使用形态学操作创建边缘区域（推荐）
+    # 创建卷积核
+    kernel_size = 2 * transition_width + 1
+    kernel = torch.ones(1, 1, kernel_size, kernel_size, device=device, dtype=mask.dtype) / (kernel_size * kernel_size)
+
+    # 膨胀操作
+    dilated = F.conv2d(mask, kernel, padding=transition_width)
+    dilated = (dilated > 0.5).float()
+
+    # 腐蚀操作
+    eroded = F.conv2d(1 - mask, kernel, padding=transition_width)
+    eroded = (eroded > 0.5).float()
+    eroded = 1 - eroded  # 反转回掩码
+
+    # 边缘区域
+    edge_region = dilated - eroded
+
+    # 对边缘区域进行高斯模糊创建渐变
+    # 创建高斯核
+    sigma = transition_width / 2
+    x = torch.arange(kernel_size, device=device) - kernel_size // 2
+    gauss = torch.exp(-x ** 2 / (2 * sigma ** 2))
+    gauss_kernel = gauss.unsqueeze(0) * gauss.unsqueeze(1)
+    gauss_kernel = gauss_kernel / gauss_kernel.sum()
+    gauss_kernel = gauss_kernel.view(1, 1, kernel_size, kernel_size)
+
+    # 对边缘区域进行高斯模糊
+    edge_weights = F.conv2d(edge_region, gauss_kernel, padding=transition_width)
+
+    # 归一化到0-1
+    edge_weights = (edge_weights - edge_weights.min()) / (edge_weights.max() - edge_weights.min() + 1e-8)
+
+    # 构建权重图
+    # 掩码外部: 权重=1, 掩码内部: 权重=0, 边缘: 渐变权重
+    weight_map = torch.ones_like(mask)
+    weight_map[mask > 0.5] = 0.0  # 内部完全使用生成
+    weight_map = weight_map + edge_region * edge_weights  # 边缘添加渐变
+    weight_map = torch.clamp(weight_map, 0, 1)  # 确保在0-1之间
+
+    # 扩展权重图以匹配图像通道
+    if C > 1:
+        weight_map = weight_map.expand(-1, C, -1, -1)
+
+    # 混合图像
+    result = original * weight_map + generated * (1 - weight_map)
+
+    # 返回与输入相同的维度
+    if original.dim() == 4 and original.shape[0] == 1:
+        result = result.squeeze(0)
+
+    return result, weight_map.squeeze(1)
+
 
 class StableDiffusion2X_AE_Pipeline(
     DiffusionPipeline,
@@ -1759,7 +1846,6 @@ class StableDiffusion2X_AE_Pipeline(
         width = width or self.unet.config.sample_size * self.vae_scale_factor
 
         device = self._execution_device
-
         image_mask = cv2.imread(image)[:, :, ::-1]
         markov_original = None
         soft_mask = None
@@ -1776,11 +1862,6 @@ class StableDiffusion2X_AE_Pipeline(
                                                                                         height, width,
                                                                                         points,
                                                                                         device=device)
-        if isinstance(image, str):
-            orig_pil = load_image(image)
-        else:
-            orig_pil = image
-        original_size = orig_pil.size  # (width, height)
         image = preprocess_image(image, device)
         # 1. Check inputs
         self.check_inputs(
@@ -2172,27 +2253,6 @@ class StableDiffusion2X_AE_Pipeline(
             self.vae = self.vae.to(dtype=torch.float32)
             latents = latents.to(dtype=self.vae.dtype)
             image = self.vae.decode(latents, return_dict=False)[0]
-
-            if original_size is not None:
-                orig_w, orig_h = original_size
-                target_h, target_w = height, width
-                # Compute scale and new size (same as in preprocess_image)
-                scale = max(target_h, target_w) / max(orig_h, orig_w)
-                new_h = int(orig_h * scale)
-                new_w = int(orig_w * scale)
-                # Compute padding
-                pad_h = target_h - new_h
-                pad_w = target_w - new_w
-                pad_top = pad_h // 2
-                pad_bottom = pad_h - pad_top
-                pad_left = pad_w // 2
-                pad_right = pad_w - pad_left
-
-                # Crop the padded area
-                image = image[:, :, pad_top:pad_top + new_h, pad_left:pad_left + new_w]
-
-                # Resize to original dimensions
-                image = F.interpolate(image, size=(orig_h, orig_w), mode='bilinear', align_corners=False)
 
             # cast back to fp16 if needed
             if needs_upcasting:

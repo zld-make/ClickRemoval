@@ -218,9 +218,10 @@ class SGA_XL(AttentionBase):
                 sim_bg = sim + mask_flatten.masked_fill(mask_flatten >= 1, -20)
 
                 # object
+                # sim_fg = self.sg_scale * sim
                 markov_reshaped = markov_flatten.view(1, 1, -1)  # (1, 1, N)
                 bg_key_mask = (mask_flatten <= 0).float().view(1, 1, -1)  # (1, 1, N)
-                suppression_factors = 1 - markov_reshaped * (1 - schedule_value)
+                suppression_factors = 1 - markov_reshaped * (1 - schedule_value)  # 1 - markov_reshaped * (1 - self.sg_scale) ss_scale控制整体抑制强度，ss_scale越小时，相似区域被抑制得越狠，且不同区域间的抑制差异也越大
                 suppression_factors = bg_key_mask * suppression_factors + (1 - bg_key_mask) * 1.0
                 sim_fg = sim * suppression_factors
                 sim_fg += mask_flatten.masked_fill(mask_flatten >= 1, -20.0)
@@ -243,6 +244,7 @@ class SGA_XL(AttentionBase):
             return super().forward(q, k, v, sim, attn, is_cross, place_in_unet, num_heads, **kwargs)
         # B = q.shape[0] // num_heads // 2
         H = int(np.sqrt(q.shape[1]))
+        # H = W = int(np.sqrt(q.shape[1]))
         if H == 16:
             M = self.mask_16.to(sim.device)
             markov_map = self.markov_map_16.to(sim.device) if hasattr(self, 'markov_map_16') else None
@@ -333,11 +335,6 @@ class TFGSchedule:
 
     def get_schedule(self, t):
         return self.schedule_cache.get(t, self.base_scale)
-
-    def get_variance_schedule(self, t, covariance_factor=0.5):
-        mean_schedule = self.get_schedule(t)
-        variance_schedule = mean_schedule * covariance_factor
-        return variance_schedule
 
 # Copied from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.rescale_noise_cfg
 def rescale_noise_cfg(noise_cfg, noise_pred_text, guidance_rescale=0.0):
@@ -577,7 +574,6 @@ def prepare_markov_maps(
         points: List[Tuple[int, int]],
         points_in_segment: List[bool],
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-
     model = M2N2SegmentationModel(attn_aggregator, use_floodfill=True)
     segmentation, distance_map, soft_mask = model.segment(
         img=image,
@@ -1902,6 +1898,7 @@ class StableDiffusionXL_AE_Pipeline(
         width = width or self.unet.config.sample_size * self.vae_scale_factor
 
         device = self._execution_device
+        # 获得掩码
         image_mask = cv2.imread(image)[:, :, ::-1]
         markov_original = None
         soft_mask = None
@@ -1918,13 +1915,6 @@ class StableDiffusionXL_AE_Pipeline(
                                                                                         height, width,
                                                                                         points,
                                                                                         device=device)
-
-        if isinstance(image, str):
-            orig_pil = load_image(image)
-        else:
-            orig_pil = image
-        original_size = orig_pil.size  # (width, height)
-
         image = preprocess_image(image, device)
         # 1. Check inputs
         self.check_inputs(
@@ -2347,27 +2337,7 @@ class StableDiffusionXL_AE_Pipeline(
             latents = latents.to(dtype=self.vae.dtype)
             image = self.vae.decode(latents, return_dict=False)[0]
 
-            if original_size is not None:
-                orig_w, orig_h = original_size
-                target_h, target_w = height, width
-                # Compute scale and new size (same as in preprocess_image)
-                scale = max(target_h, target_w) / max(orig_h, orig_w)
-                new_h = int(orig_h * scale)
-                new_w = int(orig_w * scale)
-                # Compute padding
-                pad_h = target_h - new_h
-                pad_w = target_w - new_w
-                pad_top = pad_h // 2
-                pad_bottom = pad_h - pad_top
-                pad_left = pad_w // 2
-                pad_right = pad_w - pad_left
-
-                # Crop the padded area
-                image = image[:, :, pad_top:pad_top + new_h, pad_left:pad_left + new_w]
-
-                # Resize to original dimensions
-                image = F.interpolate(image, size=(orig_h, orig_w), mode='bilinear', align_corners=False)
-
+            # cast back to fp16 if needed
             if needs_upcasting:
                 self.vae.to(dtype=torch.float16)
         else:

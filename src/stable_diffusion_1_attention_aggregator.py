@@ -190,7 +190,6 @@ def sd1_perform_single_image_diffusion_step(pipe, img: np.ndarray, timestep, dev
 class StableDiffusion1AttentionAggregator(object):
     def __init__(self,
                  timestep=100,
-                 pipe=None,
                  attention_resolution=112,
                  weight_down_block_0=0,
                  weight_down_block_1=0,
@@ -206,14 +205,14 @@ class StableDiffusion1AttentionAggregator(object):
         self.timestep = timestep
         self.device = device
         self.torch_dtype = torch_dtype
-        self.pipe=pipe
+
         # Load pipe and setup callbacks
 
-        # local_model_path = "/home/zld/work/BrushNet-main/BrushNet-main/data/ckpt/stable-diffusion-v1-5"
-        # self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
-        #     local_model_path,
-        #     torch_dtype=torch_dtype,
-        #     local_files_only=True).to(device)
+        local_model_path = "/mnt/nvme0n1/zld/BrushNet_data/ckpt/stable-diffusion-v1-5"
+        self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+            local_model_path,
+            torch_dtype=torch_dtype,
+            local_files_only=True).to(device)
         self.pipe.unet.set_attn_processor(AttnProcessor2_0())
 
         self.attention_wrappers = sd1_inject_attention_wrappers(self.pipe.unet, callback_func=self.collect_attention_tensors_callback)

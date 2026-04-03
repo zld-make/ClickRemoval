@@ -159,7 +159,7 @@ class SGA_SD(AttentionBase):
             sg_scale=1.0,
             tfg_schedule_type="increase",  # "decrease", "increase", "constant", "parabolic", "step"
             tfg_base_scale=1.0,
-            use_tfg_schedule=True,  # 是否启用TFG调度
+            use_tfg_schedule=True,
     ):
         """
         Args:
@@ -185,7 +185,7 @@ class SGA_SD(AttentionBase):
         self.sg_scale = sg_scale
         self.use_tfg_schedule = use_tfg_schedule
         if use_tfg_schedule:
-            self.tfg_schedule = SGAS(
+            self.tfg_schedule = TDGSchedule(
                 sg_steps=sg_steps,
                 schedule_type=tfg_schedule_type,
                 base_scale=tfg_base_scale
@@ -219,10 +219,9 @@ class SGA_SD(AttentionBase):
                     schedule_value = self.sg_scale
 
                 sim_bg = sim + mask_flatten.masked_fill(mask_flatten >= 1, -20)
-
                 markov_reshaped = markov_flatten.view(1, 1, -1)  # (1, 1, N)
                 bg_key_mask = (mask_flatten == 0).float().view(1, 1, -1)  # (1, 1, N)
-                suppression_factors = 1 - markov_reshaped * (1 - schedule_value)  
+                suppression_factors = 1 - markov_reshaped * (1 - schedule_value)
                 suppression_factors = bg_key_mask * suppression_factors + (1 - bg_key_mask) * 1.0
                 sim_fg = sim * suppression_factors
                 sim_fg += mask_flatten.masked_fill(mask_flatten >= 1, -20.0)
@@ -263,6 +262,8 @@ class SGA_SD(AttentionBase):
             M = self.mask_128.to(sim.device)
             markov_map = self.markov_map_128.to(sim.device) if hasattr(self, 'markov_map_128') else None
 
+
+        # print("SGA begin")
         q_wo, q_w = q.chunk(2)
         k_wo, k_w = k.chunk(2)
         v_wo, v_w = v.chunk(2)
@@ -304,7 +305,7 @@ class SGA_SD(AttentionBase):
         return out
 
 
-class SGAS:
+class TDGSchedule:
     def __init__(self, sg_steps, schedule_type="increase", base_scale=1.0):
         self.sg_steps = sg_steps
         self.schedule_type = schedule_type
@@ -341,11 +342,6 @@ class SGAS:
     def get_schedule(self, t):
         return self.schedule_cache.get(t, self.base_scale)
 
-    def get_variance_schedule(self, t, covariance_factor=0.5):
-        mean_schedule = self.get_schedule(t)
-        variance_schedule = mean_schedule * covariance_factor
-        return variance_schedule
-
 # Copied from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.rescale_noise_cfg
 def rescale_noise_cfg(noise_cfg, noise_pred_text, guidance_rescale=0.0):
     """
@@ -359,6 +355,141 @@ def rescale_noise_cfg(noise_cfg, noise_pred_text, guidance_rescale=0.0):
     # mix with the original results from guidance by factor guidance_rescale to avoid "plain looking" images
     noise_cfg = guidance_rescale * noise_pred_rescaled + (1 - guidance_rescale) * noise_cfg
     return noise_cfg
+
+
+def mask_pil_to_torch(mask, height, width):
+    # preprocess mask
+    if isinstance(mask, (PIL.Image.Image, np.ndarray)):
+        mask = [mask]
+
+    if isinstance(mask, list) and isinstance(mask[0], PIL.Image.Image):
+        mask = [i.resize((width, height), resample=PIL.Image.LANCZOS) for i in mask]
+        mask = np.concatenate([np.array(m.convert("L"))[None, None, :] for m in mask], axis=0)
+        mask = mask.astype(np.float32) / 255.0
+    elif isinstance(mask, list) and isinstance(mask[0], np.ndarray):
+        mask = np.concatenate([m[None, None, :] for m in mask], axis=0)
+
+    mask = torch.from_numpy(mask)
+    return mask
+
+
+def prepare_mask_and_masked_image(image, mask, height, width, return_image: bool = False):
+    """
+    Prepares a pair (image, mask) to be consumed by the Stable Diffusion pipeline. This means that those inputs will be
+    converted to ``torch.Tensor`` with shapes ``batch x channels x height x width`` where ``channels`` is ``3`` for the
+    ``image`` and ``1`` for the ``mask``.
+
+    The ``image`` will be converted to ``torch.float32`` and normalized to be in ``[-1, 1]``. The ``mask`` will be
+    binarized (``mask > 0.5``) and cast to ``torch.float32`` too.
+
+    Args:
+        image (Union[np.array, PIL.Image, torch.Tensor]): The image to inpaint.
+            It can be a ``PIL.Image``, or a ``height x width x 3`` ``np.array`` or a ``channels x height x width``
+            ``torch.Tensor`` or a ``batch x channels x height x width`` ``torch.Tensor``.
+        mask (_type_): The mask to apply to the image, i.e. regions to inpaint.
+            It can be a ``PIL.Image``, or a ``height x width`` ``np.array`` or a ``1 x height x width``
+            ``torch.Tensor`` or a ``batch x 1 x height x width`` ``torch.Tensor``.
+
+
+    Raises:
+        ValueError: ``torch.Tensor`` images should be in the ``[-1, 1]`` range. ValueError: ``torch.Tensor`` mask
+        should be in the ``[0, 1]`` range. ValueError: ``mask`` and ``image`` should have the same spatial dimensions.
+        TypeError: ``mask`` is a ``torch.Tensor`` but ``image`` is not
+            (ot the other way around).
+
+    Returns:
+        tuple[torch.Tensor]: The pair (mask, masked_image) as ``torch.Tensor`` with 4
+            dimensions: ``batch x channels x height x width``.
+    """
+
+    # checkpoint. TOD(Yiyi) - need to clean this up later
+    deprecation_message = "The prepare_mask_and_masked_image method is deprecated and will be removed in a future version. Please use VaeImageProcessor.preprocess instead"
+    deprecate(
+        "prepare_mask_and_masked_image",
+        "0.30.0",
+        deprecation_message,
+    )
+    if image is None:
+        raise ValueError("`image` input cannot be undefined.")
+
+    if mask is None:
+        raise ValueError("`mask_image` input cannot be undefined.")
+
+    if isinstance(image, torch.Tensor):
+        if not isinstance(mask, torch.Tensor):
+            mask = mask_pil_to_torch(mask, height, width)
+
+        if image.ndim == 3:
+            image = image.unsqueeze(0)
+
+        # Batch and add channel dim for single mask
+        if mask.ndim == 2:
+            mask = mask.unsqueeze(0).unsqueeze(0)
+
+        # Batch single mask or add channel dim
+        if mask.ndim == 3:
+            # Single batched mask, no channel dim or single mask not batched but channel dim
+            if mask.shape[0] == 1:
+                mask = mask.unsqueeze(0)
+
+            # Batched masks no channel dim
+            else:
+                mask = mask.unsqueeze(1)
+
+        assert image.ndim == 4 and mask.ndim == 4, "Image and Mask must have 4 dimensions"
+        # assert image.shape[-2:] == mask.shape[-2:], "Image and Mask must have the same spatial dimensions"
+        assert image.shape[0] == mask.shape[0], "Image and Mask must have the same batch size"
+
+        # Check image is in [-1, 1]
+        # if image.min() < -1 or image.max() > 1:
+        #    raise ValueError("Image should be in [-1, 1] range")
+
+        # Check mask is in [0, 1]
+        if mask.min() < 0 or mask.max() > 1:
+            raise ValueError("Mask should be in [0, 1] range")
+
+        # Binarize mask
+        mask[mask < 0.5] = 0
+        mask[mask >= 0.5] = 1
+
+        # Image as float32
+        image = image.to(dtype=torch.float32)
+    elif isinstance(mask, torch.Tensor):
+        raise TypeError(f"`mask` is a torch.Tensor but `image` (type: {type(image)} is not")
+    else:
+        # preprocess image
+        if isinstance(image, (PIL.Image.Image, np.ndarray)):
+            image = [image]
+        if isinstance(image, list) and isinstance(image[0], PIL.Image.Image):
+            # resize all images w.r.t passed height an width
+            image = [i.resize((width, height), resample=PIL.Image.LANCZOS) for i in image]
+            image = [np.array(i.convert("RGB"))[None, :] for i in image]
+            image = np.concatenate(image, axis=0)
+        elif isinstance(image, list) and isinstance(image[0], np.ndarray):
+            image = np.concatenate([i[None, :] for i in image], axis=0)
+
+        image = image.transpose(0, 3, 1, 2)
+        image = torch.from_numpy(image).to(dtype=torch.float32) / 127.5 - 1.0
+
+        mask = mask_pil_to_torch(mask, height, width)
+        mask[mask < 0.5] = 0
+        mask[mask >= 0.5] = 1
+
+    if image.shape[1] == 4:
+        # images are in latent space and thus can't
+        # be masked set masked_image to None
+        # we assume that the checkpoint is not an inpainting
+        # checkpoint. TOD(Yiyi) - need to clean this up later
+        masked_image = None
+    else:
+        masked_image = image * (mask < 0.5)
+
+    # n.b. ensure backwards compatibility as old function does not return image
+    if return_image:
+        return mask, masked_image, image
+
+    return mask, masked_image
+
 
 # Copied from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion_img2img.retrieve_latents
 def retrieve_latents(
@@ -449,7 +580,14 @@ def prepare_markov_maps(
         points: List[Tuple[int, int]],
         points_in_segment: List[bool],
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    """
+    为多个点击创建和合并马尔可夫图
 
+    :return: (markov_floodfill, markov_original)
+        markov_floodfill: 修复区域的软掩码（0-1，值越大表示越应该修复）
+        markov_original: 注意力引导权重（0-1，值越大表示越需要关注）
+    """
+    assert len(points) == len(points_in_segment), "点击位置和标签数量必须一致"
     model = M2N2SegmentationModel(attn_aggregator, use_floodfill=True)
     segmentation, distance_map, soft_mask = model.segment(
         img=image,
@@ -553,73 +691,7 @@ def preprocess_image(image_path, device, height=512, width=512):
     image = image.to(torch.float16).to(device)
     return image
 
-
-def distance_field_blending_pytorch(original, generated, mask, transition_width=3):
-
-    if not isinstance(original, torch.Tensor):
-        original = torch.tensor(original)
-    if not isinstance(generated, torch.Tensor):
-        generated = torch.tensor(generated)
-    if not isinstance(mask, torch.Tensor):
-        mask = torch.tensor(mask)
-
-    device = original.device
-
-    if original.dim() == 3:
-        original = original.unsqueeze(0)  # [C, H, W] -> [1, C, H, W]
-    if generated.dim() == 3:
-        generated = generated.unsqueeze(0)
-    if mask.dim() == 2:
-        mask = mask.unsqueeze(0).unsqueeze(0)  # [H, W] -> [1, 1, H, W]
-    elif mask.dim() == 3:
-        mask = mask.unsqueeze(1)  # [B, H, W] -> [B, 1, H, W]
-
-    B, C, H, W = original.shape
-    _, _, Hm, Wm = mask.shape
-
-    if H != Hm or W != Wm:
-        mask = F.interpolate(mask, size=(H, W), mode='bilinear', align_corners=False)
-
-    kernel_size = 2 * transition_width + 1
-    kernel = torch.ones(1, 1, kernel_size, kernel_size, device=device, dtype=mask.dtype) / (kernel_size * kernel_size)
-
-    dilated = F.conv2d(mask, kernel, padding=transition_width)
-    dilated = (dilated > 0.5).float()
-
-    eroded = F.conv2d(1 - mask, kernel, padding=transition_width)
-    eroded = (eroded > 0.5).float()
-    eroded = 1 - eroded
-
-    edge_region = dilated - eroded
-
-    sigma = transition_width / 2
-    x = torch.arange(kernel_size, device=device) - kernel_size // 2
-    gauss = torch.exp(-x ** 2 / (2 * sigma ** 2))
-    gauss_kernel = gauss.unsqueeze(0) * gauss.unsqueeze(1)
-    gauss_kernel = gauss_kernel / gauss_kernel.sum()
-    gauss_kernel = gauss_kernel.view(1, 1, kernel_size, kernel_size)
-
-    edge_weights = F.conv2d(edge_region, gauss_kernel, padding=transition_width)
-
-    edge_weights = (edge_weights - edge_weights.min()) / (edge_weights.max() - edge_weights.min() + 1e-8)
-
-    weight_map = torch.ones_like(mask)
-    weight_map[mask > 0.5] = 0.0
-    weight_map = weight_map + edge_region * edge_weights
-    weight_map = torch.clamp(weight_map, 0, 1)
-
-    if C > 1:
-        weight_map = weight_map.expand(-1, C, -1, -1)
-
-    result = original * weight_map + generated * (1 - weight_map)
-
-    if original.dim() == 4 and original.shape[0] == 1:
-        result = result.squeeze(0)
-
-    return result, weight_map.squeeze(1)
-
-
-class StableDiffusion1X_Pipeline(
+class StableDiffusion1X_AE_Pipeline(
     DiffusionPipeline,
     StableDiffusionMixin,
     TextualInversionLoaderMixin,
@@ -1193,6 +1265,13 @@ class StableDiffusion1X_Pipeline(
     def prepare_mask_latents(
             self, mask, masked_image, batch_size, height, width, dtype, device, generator, do_classifier_free_guidance
     ):
+        # resize the mask to latents shape as we concatenate the mask to the latents
+        # we do that before converting to dtype to avoid breaking in case we're using cpu_offload
+        # and half precision
+        # mask = torch.nn.functional.interpolate(
+        #    mask, size=(height // self.vae_scale_factor, width // self.vae_scale_factor)
+        # )
+
         mask = torch.nn.functional.max_pool2d(mask, (8, 8)).round()
         mask = mask.to(device=device, dtype=dtype)
 
@@ -1702,11 +1781,6 @@ class StableDiffusion1X_Pipeline(
                                                                                         height, width,
                                                                                         points,
                                                                                         device=device)
-        if isinstance(image, str):
-            orig_pil = load_image(image)
-        else:
-            orig_pil = image
-        original_size = orig_pil.size  # (width, height)
         image = preprocess_image(image, device)
         # 1. Check inputs
         self.check_inputs(
@@ -1968,8 +2042,6 @@ class StableDiffusion1X_Pipeline(
             ).to(device=device, dtype=latents.dtype)
 
         self._num_timesteps = len(timesteps)
-        print(f"{timesteps} timesteps steps")
-        print(f"{num_inference_steps} num_inference_steps")
 
         with self.progress_bar(total=num_inference_steps) as progress_bar:
             for i, t in enumerate(timesteps):
@@ -1992,6 +2064,10 @@ class StableDiffusion1X_Pipeline(
                 if num_channels_unet == 9:
                     latent_model_input = torch.cat([latent_model_input, mask, masked_image_latents], dim=1)
 
+                # predict the noise residual
+                # added_cond_kwargs = {"text_embeds": add_text_embeds, "time_ids": add_time_ids}
+                # if ip_adapter_image is not None or ip_adapter_image_embeds is not None:
+                #     added_cond_kwargs["image_embeds"] = image_embeds
                 added_cond_kwargs = (
                     {"image_embeds": image_embeds}
                     if (ip_adapter_image is not None or ip_adapter_image_embeds is not None)
@@ -2093,28 +2169,8 @@ class StableDiffusion1X_Pipeline(
                 latents = latents / self.vae.config.scaling_factor
             self.vae = self.vae.to(dtype=torch.float32)
             latents = latents.to(dtype=self.vae.dtype)
+
             image = self.vae.decode(latents, return_dict=False)[0]
-
-            if original_size is not None:
-                orig_w, orig_h = original_size
-                target_h, target_w = height, width
-                # Compute scale and new size (same as in preprocess_image)
-                scale = max(target_h, target_w) / max(orig_h, orig_w)
-                new_h = int(orig_h * scale)
-                new_w = int(orig_w * scale)
-                # Compute padding
-                pad_h = target_h - new_h
-                pad_w = target_w - new_w
-                pad_top = pad_h // 2
-                pad_bottom = pad_h - pad_top
-                pad_left = pad_w // 2
-                pad_right = pad_w - pad_left
-
-                # Crop the padded area
-                image = image[:, :, pad_top:pad_top + new_h, pad_left:pad_left + new_w]
-
-                # Resize to original dimensions
-                image = F.interpolate(image, size=(orig_h, orig_w), mode='bilinear', align_corners=False)
 
             # cast back to fp16 if needed
             if needs_upcasting:

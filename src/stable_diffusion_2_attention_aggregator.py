@@ -197,7 +197,7 @@ class StableDiffusion2AttentionAggregator(object):
                  weight_up_block_0=0.5,
                  weight_up_block_1=0.5,
                  weight_up_block_2=0,
-                 hugging_face_model_id="stabilityai/stable-diffusion-2",
+                 #hugging_face_model_id="stabilityai/stable-diffusion-2",
                  device='cuda:0',
                  torch_dtype=torch.float16):
         self.stable_diffusion_img_size = (8 * attention_resolution, 8 * attention_resolution)
@@ -207,14 +207,7 @@ class StableDiffusion2AttentionAggregator(object):
         self.device = device
         self.torch_dtype = torch_dtype
         self.pipe=pipe
-
         # Load pipe and setup callbacks
-        # local_model_path = "/home/zld/work/BrushNet-main/BrushNet-main/data/ckpt/stable-diffusion-2-1-base"
-        # self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
-        #     local_model_path,
-        #     torch_dtype=torch_dtype,
-        #     local_files_only=True
-        # ).to(device)
 
         self.pipe.unet.set_attn_processor(AttnProcessor2_0())
 

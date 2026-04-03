@@ -8,3 +8,8 @@ transformers
 matplotlib
 accelerate
 torchvision
+numba
+kornia
+accelerate
+
+conda create -n ClickRemoval python=3.11
