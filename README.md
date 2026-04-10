@@ -1,4 +1,4 @@
-# ClickRemoval – One‑Click Object Removal with Self‑Guided Attention Redirection
+# ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models
 
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 ## Qualitative Comparison
