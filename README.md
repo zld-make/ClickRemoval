@@ -3,10 +3,12 @@
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 ## Qualitative Comparison
 
+
+
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
 
 <div align="center">
-  <img src="assets/images/comparison.png" alt="Comparison of various models" width="95%">
+  <img src="assets/images/framework.png" alt="Comparison of various models" width="95%">
   <br>
   <em>Figure: Visual comparison of different models. ClickRemoval removes target objects more thoroughly and restores backgrounds more naturally.</em>
 </div>
@@ -16,6 +18,16 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 - **Plug‑and‑play** – Works with any Stable Diffusion model that contains self‑attention layers (SD1.5, SD2.1, SDXL, and their fine‑tuned variants).
 - **Click‑only interaction** – No masks, no text prompts, no training. Supports positive/negative clicks for higher precision.
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
+
+## Model Architecture
+
+The figure below illustrates the overall architecture of ClickRemoval, including the Attention Activation and Suppression (AAS) module and the Self-Attention Redirection Guidance (SARG) mechanism.
+
+<div align="center">
+  <img src="assets/images/architecture.png" alt="ClickRemoval Architecture" width="80%">
+  <br>
+  <em>Figure: Overall framework of ClickRemoval. The pipeline consists of a frozen Stable Diffusion U-Net, user click embeddings, and our proposed attention modulation modules (AAS and SARG).</em>
+</div>
 
 ## Supported Backbones
 
