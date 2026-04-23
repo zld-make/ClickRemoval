@@ -8,7 +8,7 @@ ClickRemoval is a **fully open‑source, training‑free** object removal tool b
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
 
 <div align="center">
-  <img src="assets/images/framework.png" alt="Comparison of various models" width="95%">
+  <img src="assets/images/comparison.png" alt="Comparison of various models" width="95%">
   <br>
   <em>Figure: Visual comparison of different models. ClickRemoval removes target objects more thoroughly and restores backgrounds more naturally.</em>
 </div>
@@ -24,7 +24,7 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 The figure below illustrates the overall architecture of ClickRemoval, including the Attention Activation and Suppression (AAS) module and the Self-Attention Redirection Guidance (SARG) mechanism.
 
 <div align="center">
-  <img src="assets/images/architecture.png" alt="ClickRemoval Architecture" width="80%">
+  <img src="assets/images/framework.png" alt="ClickRemoval Architecture" width="80%">
   <br>
   <em>Figure: Overall framework of ClickRemoval. The pipeline consists of a frozen Stable Diffusion U-Net, user click embeddings, and our proposed attention modulation modules (AAS and SARG).</em>
 </div>
