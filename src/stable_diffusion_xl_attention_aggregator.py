@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 import math
-
+import os
 import cv2
 from diffusers import StableDiffusionImg2ImgPipeline
 import torch
@@ -189,6 +189,7 @@ def sd2_perform_single_image_diffusion_step(pipe, img: np.ndarray, timestep, dev
 
 class StableDiffusionxlAttentionAggregator(object):
     def __init__(self,
+                 pipe=None,
                  timestep=100,
                  attention_resolution=128,
                  weight_down_block_0=0,
@@ -205,9 +206,10 @@ class StableDiffusionxlAttentionAggregator(object):
         self.timestep = timestep
         self.device = device
         self.torch_dtype = torch_dtype
-
+        self.pipe = pipe
         # Load pipe and setup callbacks
-        local_model_path = "/root/autodl-tmp/stable-diffusion-2-1-base"
+
+        local_model_path = "./models/stable-diffusion-2-1-base"
         self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
             local_model_path,
             torch_dtype=torch_dtype,

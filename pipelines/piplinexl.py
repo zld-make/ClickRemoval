@@ -580,8 +580,6 @@ def prepare_markov_maps(
         points=points,
         points_in_segment=points_in_segment
     )
-    visualize(image, points, segmentation)
-    visualize(image, points, soft_mask)
 
     return segmentation, distance_map, soft_mask
 
@@ -1813,7 +1811,7 @@ class StableDiffusionXL_AE_Pipeline(
             image: PipelineImageInput = None,
             points: PipelineImageInput = None,
             points_in_segment=None,
-            attn=None,
+            attn_aggregator=None,
             mask_image: PipelineImageInput = None,
             masked_image_latents: torch.FloatTensor = None,
             height: Optional[int] = None,
@@ -1904,7 +1902,7 @@ class StableDiffusionXL_AE_Pipeline(
         soft_mask = None
         if points is not None:
             mask_image, markov_original, soft_mask = prepare_markov_maps(
-                attn_aggregator=attn,
+                attn_aggregator=attn_aggregator,
                 image=image_mask,
                 points=points,
                 points_in_segment=points_in_segment,

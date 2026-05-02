@@ -189,6 +189,7 @@ def sd1_perform_single_image_diffusion_step(pipe, img: np.ndarray, timestep, dev
 
 class StableDiffusion1AttentionAggregator(object):
     def __init__(self,
+                 pipe=None,
                  timestep=100,
                  attention_resolution=112,
                  weight_down_block_0=0,
@@ -196,7 +197,7 @@ class StableDiffusion1AttentionAggregator(object):
                  weight_up_block_0=0.5,
                  weight_up_block_1=0.5,
                  weight_up_block_2=0,
-                 hugging_face_model_id="CompVis/stable-diffusion-v1-1",
+                 #hugging_face_model_id="CompVis/stable-diffusion-v1-1",
                  device='cuda:0',
                  torch_dtype=torch.float16):
         self.stable_diffusion_img_size = (8 * attention_resolution, 8 * attention_resolution)
@@ -205,14 +206,15 @@ class StableDiffusion1AttentionAggregator(object):
         self.timestep = timestep
         self.device = device
         self.torch_dtype = torch_dtype
-
+        self.pipe = pipe
         # Load pipe and setup callbacks
-
-        local_model_path = "/mnt/nvme0n1/zld/BrushNet_data/ckpt/stable-diffusion-v1-5"
-        self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
-            local_model_path,
-            torch_dtype=torch_dtype,
-            local_files_only=True).to(device)
+        if self.pipe is None:
+            local_model_path = "./models/stable-diffusion-v1-5"
+            self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+                local_model_path,
+                torch_dtype=torch_dtype,
+                local_files_only=True
+            ).to(device)
         self.pipe.unet.set_attn_processor(AttnProcessor2_0())
 
         self.attention_wrappers = sd1_inject_attention_wrappers(self.pipe.unet, callback_func=self.collect_attention_tensors_callback)

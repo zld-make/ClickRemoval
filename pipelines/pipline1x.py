@@ -580,22 +580,12 @@ def prepare_markov_maps(
         points: List[Tuple[int, int]],
         points_in_segment: List[bool],
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-    """
-    为多个点击创建和合并马尔可夫图
-
-    :return: (markov_floodfill, markov_original)
-        markov_floodfill: 修复区域的软掩码（0-1，值越大表示越应该修复）
-        markov_original: 注意力引导权重（0-1，值越大表示越需要关注）
-    """
-    assert len(points) == len(points_in_segment), "点击位置和标签数量必须一致"
     model = M2N2SegmentationModel(attn_aggregator, use_floodfill=True)
     segmentation, distance_map, soft_mask = model.segment(
         img=image,
         points=points,
         points_in_segment=points_in_segment
     )
-    visualize(image, points, segmentation)
-    visualize(image, points, soft_mask)
 
     return segmentation, distance_map, soft_mask
 

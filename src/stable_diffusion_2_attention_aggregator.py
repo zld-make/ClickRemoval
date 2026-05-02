@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 import math
-
+import os
 import cv2
 from diffusers import StableDiffusionImg2ImgPipeline
 import torch
@@ -208,6 +208,13 @@ class StableDiffusion2AttentionAggregator(object):
         self.torch_dtype = torch_dtype
         self.pipe=pipe
         # Load pipe and setup callbacks
+        if self.pipe is None:
+            local_model_path = "./models/stable-diffusion-2-1-base"
+            self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+                local_model_path,
+                torch_dtype=torch_dtype,
+                local_files_only=True
+            ).to(device)
 
         self.pipe.unet.set_attn_processor(AttnProcessor2_0())
 
@@ -263,6 +270,7 @@ class StableDiffusion2AttentionAggregator(object):
             torch_dtype=self.torch_dtype
         )
         out = self.current_merged_tensor / torch.sum(self.current_merged_tensor.reshape(self.attn_target_resolution[1], self.attn_target_resolution[0], -1), dim=2)[:, :, None, None]
+        self.current_merged_tensor = None
         return out
 
 

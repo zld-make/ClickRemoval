@@ -14,7 +14,7 @@
 
 import inspect
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
-
+from PIL import Image as PILImage
 import cv2
 import numpy as np
 import PIL.Image
@@ -681,98 +681,6 @@ def preprocess_image(image_path, device, height=512, width=512):
     image = image.to(torch.float16).to(device)
     return image
 
-
-def distance_field_blending_pytorch(original, generated, mask, transition_width=3):
-    """
-    使用PyTorch实现的边缘混合，支持4维张量输入
-
-    Args:
-        original: 原始图像 [B, C, H, W] 或 [C, H, W]
-        generated: 生成图像 [B, C, H, W] 或 [C, H, W]
-        mask: 掩码 [B, 1, H, W] 或 [1, H, W] 或 [H, W]，值为0和1
-        transition_width: 过渡宽度
-    """
-    # 确保输入是PyTorch张量
-    if not isinstance(original, torch.Tensor):
-        original = torch.tensor(original)
-    if not isinstance(generated, torch.Tensor):
-        generated = torch.tensor(generated)
-    if not isinstance(mask, torch.Tensor):
-        mask = torch.tensor(mask)
-
-    # 记录原始设备
-    device = original.device
-
-    # 统一维度为 [B, C, H, W]
-    if original.dim() == 3:
-        original = original.unsqueeze(0)  # [C, H, W] -> [1, C, H, W]
-    if generated.dim() == 3:
-        generated = generated.unsqueeze(0)
-    if mask.dim() == 2:
-        mask = mask.unsqueeze(0).unsqueeze(0)  # [H, W] -> [1, 1, H, W]
-    elif mask.dim() == 3:
-        mask = mask.unsqueeze(1)  # [B, H, W] -> [B, 1, H, W]
-
-    B, C, H, W = original.shape
-    _, _, Hm, Wm = mask.shape
-
-    # 确保掩码与图像尺寸匹配
-    if H != Hm or W != Wm:
-        mask = F.interpolate(mask, size=(H, W), mode='bilinear', align_corners=False)
-
-    # 方法1：使用形态学操作创建边缘区域（推荐）
-    # 创建卷积核
-    kernel_size = 2 * transition_width + 1
-    kernel = torch.ones(1, 1, kernel_size, kernel_size, device=device, dtype=mask.dtype) / (kernel_size * kernel_size)
-
-    # 膨胀操作
-    dilated = F.conv2d(mask, kernel, padding=transition_width)
-    dilated = (dilated > 0.5).float()
-
-    # 腐蚀操作
-    eroded = F.conv2d(1 - mask, kernel, padding=transition_width)
-    eroded = (eroded > 0.5).float()
-    eroded = 1 - eroded  # 反转回掩码
-
-    # 边缘区域
-    edge_region = dilated - eroded
-
-    # 对边缘区域进行高斯模糊创建渐变
-    # 创建高斯核
-    sigma = transition_width / 2
-    x = torch.arange(kernel_size, device=device) - kernel_size // 2
-    gauss = torch.exp(-x ** 2 / (2 * sigma ** 2))
-    gauss_kernel = gauss.unsqueeze(0) * gauss.unsqueeze(1)
-    gauss_kernel = gauss_kernel / gauss_kernel.sum()
-    gauss_kernel = gauss_kernel.view(1, 1, kernel_size, kernel_size)
-
-    # 对边缘区域进行高斯模糊
-    edge_weights = F.conv2d(edge_region, gauss_kernel, padding=transition_width)
-
-    # 归一化到0-1
-    edge_weights = (edge_weights - edge_weights.min()) / (edge_weights.max() - edge_weights.min() + 1e-8)
-
-    # 构建权重图
-    # 掩码外部: 权重=1, 掩码内部: 权重=0, 边缘: 渐变权重
-    weight_map = torch.ones_like(mask)
-    weight_map[mask > 0.5] = 0.0  # 内部完全使用生成
-    weight_map = weight_map + edge_region * edge_weights  # 边缘添加渐变
-    weight_map = torch.clamp(weight_map, 0, 1)  # 确保在0-1之间
-
-    # 扩展权重图以匹配图像通道
-    if C > 1:
-        weight_map = weight_map.expand(-1, C, -1, -1)
-
-    # 混合图像
-    result = original * weight_map + generated * (1 - weight_map)
-
-    # 返回与输入相同的维度
-    if original.dim() == 4 and original.shape[0] == 1:
-        result = result.squeeze(0)
-
-    return result, weight_map.squeeze(1)
-
-
 class StableDiffusion2X_AE_Pipeline(
     DiffusionPipeline,
     StableDiffusionMixin,
@@ -1155,8 +1063,8 @@ class StableDiffusion2X_AE_Pipeline(
     # Copied from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.StableDiffusionPipeline.prepare_extra_step_kwargs
     def prepare_extra_step_kwargs(self, generator, eta):
         # prepare extra kwargs for the scheduler step, since not all schedulers have the same signature
-        # eta (η) is only used with the DDIMScheduler, it will be ignored for other schedulers.
-        # eta corresponds to η in DDIM paper: https://arxiv.org/abs/2010.02502
+        # eta (畏) is only used with the DDIMScheduler, it will be ignored for other schedulers.
+        # eta corresponds to 畏 in DDIM paper: https://arxiv.org/abs/2010.02502
         # and should be between [0, 1]
 
         accepts_eta = "eta" in set(inspect.signature(self.scheduler.step).parameters.keys())
@@ -2252,6 +2160,7 @@ class StableDiffusion2X_AE_Pipeline(
                 latents = latents / self.vae.config.scaling_factor
             self.vae = self.vae.to(dtype=torch.float32)
             latents = latents.to(dtype=self.vae.dtype)
+
             image = self.vae.decode(latents, return_dict=False)[0]
 
             # cast back to fp16 if needed
