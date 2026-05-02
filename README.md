@@ -42,6 +42,7 @@ All variants are fully compatible with community fine‑tuned models (e.g. anime
 ## What's New
 
 **2026-04-03** – Full code refresh, updated requirements, GitHub sync → project fully runnable.  
+**2026-04-23** – Fixed bugs and issues in inference code; improved stability and error handling.
 **2026-05-02** – Added interactive Gradio demo (`app.py`) and a complete Jupyter Notebook tutorial (`ClickRemoval_Test_Tutorial.ipynb`).  
 *More updates coming soon...*
 
