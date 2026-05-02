@@ -42,6 +42,7 @@ All variants are fully compatible with community fine‑tuned models (e.g. anime
 ## What's New
 
 **2026-04-03** – Full code refresh, updated requirements, GitHub sync → project fully runnable.  
+**2026-05-02** – Added interactive Gradio demo (`app.py`) and a complete Jupyter Notebook tutorial (`ClickRemoval_Test_Tutorial.ipynb`).  
 *More updates coming soon...*
 
 > 🚀 The tool is fully open‑source under the Apache‑2.0 license.  
