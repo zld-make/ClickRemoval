@@ -21,7 +21,7 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 
 ## Model Architecture
 
-The figure below illustrates the overall architecture of ClickRemoval, including the Attention Activation and Suppression (AAS) module and the Self-Attention Redirection Guidance (SARG) mechanism.
+The figure below illustrates the overall architecture of ClickRemoval.
 
 <div align="center">
   <img src="assets/images/framework.png" alt="ClickRemoval Architecture" width="80%">
