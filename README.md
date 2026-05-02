@@ -26,7 +26,7 @@ The figure below illustrates the overall architecture of ClickRemoval, including
 <div align="center">
   <img src="assets/images/framework.png" alt="ClickRemoval Architecture" width="80%">
   <br>
-  <em>Figure: Overall framework of ClickRemoval. The pipeline consists of a frozen Stable Diffusion U-Net, user click embeddings, and our proposed attention modulation modules (AAS and SARG).</em>
+  <em>Figure: Qualitative comparison with baseline methods. Green points indicate positive clicks for removal, and red points indicate negative clicks for preservation.</em>
 </div>
 
 ## Supported Backbones
