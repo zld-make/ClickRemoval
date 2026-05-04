@@ -1,22 +1,51 @@
 #!/bin/bash
-# download_models.sh
+set -e
 
-set -e  
+MODEL_ROOT="${MODEL_ROOT:-./models}"
+mkdir -p "$MODEL_ROOT"
 
-MODEL_DIR="./models/stable-diffusion-2-1-base"
-if [ -d "$MODEL_DIR" ]; then
-    echo "Model already exists at $MODEL_DIR. Skipping download."
-    exit 0
-fi
+pip install -q huggingface_hub
 
-echo "Downloading Stable Diffusion 2.1 base model from Hugging Face..."
+download_model () {
+  local repo_id="$1"
+  local local_dir="$2"
 
-pip install huggingface_hub -q
-
-
-python -c "
+  if [ -d "$local_dir" ] && [ "$(ls -A "$local_dir" 2>/dev/null)" ]; then
+    echo "Model already exists at $local_dir. Skipping."
+  else
+    echo "Downloading $repo_id to $local_dir ..."
+    python - <<PY
 from huggingface_hub import snapshot_download
-snapshot_download(repo_id='sd-research/stable-diffusion-2-1-base', local_dir='$MODEL_DIR', local_dir_use_symlinks=False)
-"
+snapshot_download(
+    repo_id="$repo_id",
+    local_dir="$local_dir",
+    local_dir_use_symlinks=False
+)
+PY
+  fi
+}
 
-echo "Model downloaded to $MODEL_DIR"
+case "${1:-sd15}" in
+  sd15)
+    download_model "ledun-ai/stable-diffusion-v1-5" "$MODEL_ROOT/stable-diffusion-v1-5"
+    ;;
+  sdxl)
+    download_model "ledun-ai/stable-diffusion-xl-base-1.0" "$MODEL_ROOT/stable-diffusion-xl-base-1.0"
+    ;;
+  sd21)
+    echo "Downloading SD2.1 from ledun-ai/stable-diffusion-2-1-base ..."
+    download_model "ledun-ai/stable-diffusion-2-1-base" "$MODEL_ROOT/stable-diffusion-2-1-base"
+    ;;
+  all)
+    download_model "ledun-ai/stable-diffusion-v1-5" "$MODEL_ROOT/stable-diffusion-v1-5"
+    download_model "ledun-ai/stable-diffusion-xl-base-1.0" "$MODEL_ROOT/stable-diffusion-xl-base-1.0"
+    echo "Downloading SD2.1 from ledun-ai/stable-diffusion-2-1-base ..."
+    download_model "ledun-ai/stable-diffusion-2-1-base" "$MODEL_ROOT/stable-diffusion-2-1-base"
+    ;;
+  *)
+    echo "Usage: bash download_models.sh [sd15|sdxl|sd21|all]"
+    exit 1
+    ;;
+esac
+
+echo "Done."

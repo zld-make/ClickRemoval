@@ -18,11 +18,12 @@ import gradio as gr
 import torch
 from PIL import Image, ImageDraw, ImageFont
 from diffusers import DDIMScheduler, DiffusionPipeline
-
+import sys
+sys.stdout.reconfigure(line_buffering=True)
 # ----------------------------------------------------------------------
 #  Configuration and Constants
 # ----------------------------------------------------------------------
-DEFAULT_MODEL = "sd21"  # 'sd15', 'sd21', 'sdxl'
+DEFAULT_MODEL = "sd15"  # 'sd15', 'sd21', 'sdxl'
 DEFAULT_PIPELINE_STRENGTH = 0.8
 MODEL_PATHS = {
     "sd15": "./models/stable-diffusion-v1-5",
@@ -30,9 +31,9 @@ MODEL_PATHS = {
     "sdxl": "./models/stable-diffusion-xl-base-1.0",
 }
 HF_MODEL_IDS = {
-    "sd15": "runwayml/stable-diffusion-v1-5",
-    "sd21": "stabilityai/stable-diffusion-2-1-base",
-    "sdxl": "stabilityai/stable-diffusion-xl-base-1.0",
+    "sd15": "ledun-ai/stable-diffusion-v1-5",
+    "sd21": "ledun-ai/stable-diffusion-2-1-base",
+    "sdxl": "ledun-ai/stable-diffusion-xl-base-1.0",
 }
 
 MODEL_CONFIGS = {
@@ -159,6 +160,7 @@ def load_model(model_name: str, device: str, low_vram: bool = False):
         variant="fp16" if dtype == torch.float16 else None,
         use_safetensors=True,
         torch_dtype=dtype,
+        trust_remote_code=True,
     ).to(device)
 
     pipeline.enable_attention_slicing()
@@ -958,4 +960,4 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     demo = build_ui(device=args.device)
-    demo.launch(server_port=args.port, share=args.share, theme=gr.themes.Soft(primary_hue="blue", neutral_hue="slate"))
+    demo.launch(server_port=args.port, server_name="0.0.0.0", share=args.share, theme=gr.themes.Soft(primary_hue="blue", neutral_hue="slate"))

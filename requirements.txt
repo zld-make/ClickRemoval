@@ -11,4 +11,5 @@ torchvision
 numba
 kornia
 accelerate
-
+gradio
+pillow

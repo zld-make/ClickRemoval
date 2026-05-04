@@ -18,8 +18,5 @@ COPY . /workspace
 
 WORKDIR /workspace
 
-ENV IMAGE_DIR=./data/examples/img1-1 \
-    COORD_DIR=./data/examples/coord1-1 \
-    MODEL_PATH=./models/stable-diffusion-2-1-base
-
-CMD ["python", "test-2x.py"]
+EXPOSE 7860
+CMD ["python", "app.py", "--port", "7860"]
