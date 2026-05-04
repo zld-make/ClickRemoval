@@ -26,7 +26,7 @@ The figure below illustrates the overall architecture of ClickRemoval, including
 <div align="center">
   <img src="assets/images/framework.png" alt="ClickRemoval Architecture" width="80%">
   <br>
-  <em>Figure: Overall framework of ClickRemoval. The pipeline consists of a frozen Stable Diffusion U-Net, user click embeddings, and our proposed attention modulation modules (AAS and SARG).</em>
+  <em>Figure: Overview of ClickRemoval. M2N2 converts user clicks into semantic maps, SGAR and SGAS redirect self-attention during denoising, and ARG blends the original and modulated predictions to control removal strength.</em>
 </div>
 
 ## Supported Backbones
