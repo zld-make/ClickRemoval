@@ -33,9 +33,9 @@ The figure below illustrates the overall architecture of ClickRemoval, including
 
 | Model | Steps | Use Case | Download |
 |-------|-------|----------|----------|
-| SD1.5  | 25    | Lightweight, real‑time, resource‑constrained devices | [⬇️ SD1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) |
-| SD2.1  | 50    | Balanced quality and speed | [⬇️ SD2.1](https://huggingface.co/stabilityai/stable-diffusion-2-1) |
-| SDXL   | 50    | High‑quality removal for production use | [⬇️ SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) |
+| SD1.5  | 25    | Lightweight, real‑time, resource‑constrained devices | [⬇️ SD1.5](https://huggingface.co/ledun-ai/stable-diffusion-v1-5) |
+| SD2.1  | 50    | Balanced quality and speed | [⬇️ SD2.1](https://huggingface.co/ledun-ai/stable-diffusion-2-1) |
+| SDXL   | 50    | High‑quality removal for production use | [⬇️ SDXL](https://huggingface.co/ledun-ai/stable-diffusion-xl-base-1.0) |
 
 All variants are fully compatible with community fine‑tuned models (e.g. anime, photorealistic).
 
