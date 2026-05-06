@@ -1,10 +1,18 @@
 # ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models
 
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
+
+## docker
+
+### docker build
+```bash
+docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
+
+## environment
+
+
+
 ## Qualitative Comparison
-
-
-
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
 
 <div align="center">
@@ -18,6 +26,9 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 - **Plug‑and‑play** – Works with any Stable Diffusion model that contains self‑attention layers (SD1.5, SD2.1, SDXL, and their fine‑tuned variants).
 - **Click‑only interaction** – No masks, no text prompts, no training. Supports positive/negative clicks for higher precision.
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
+
+### Option 1: Docker Installation (Recommended)
+
 
 ## Model Architecture
 
