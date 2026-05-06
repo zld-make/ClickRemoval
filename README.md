@@ -76,19 +76,30 @@ The figure below illustrates the overall architecture of ClickRemoval, including
 
 ## Supported Backbones
 
-| Model | Steps | Use Case | Download |
-|-------|-------|----------|----------|
-| SD1.5  | 25    | Lightweight, real‑time, resource‑constrained devices | [⬇️ SD1.5](https://huggingface.co/ledun-ai/stable-diffusion-v1-5) |
-| SD2.1  | 50    | Balanced quality and speed | [⬇️ SD2.1](https://huggingface.co/ledun-ai/stable-diffusion-2-1-base) |
-| SDXL   | 50    | High‑quality removal for production use | [⬇️ SDXL](https://huggingface.co/ledun-ai/stable-diffusion-xl-base-1.0) |
+| Model | Preset | Local Directory | Hugging Face Repository | Resolution | Recommended Use |
+|-------|--------|-----------------|--------------------------|------------|-----------------|
+| SD1.5 | `sd15` | `models/stable-diffusion-v1-5` | [`stable-diffusion-v1-5/stable-diffusion-v1-5`](https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5) | 512 | Lightweight, fast demo, resource-constrained devices |
+| SD2.1 | `sd21` | `models/stable-diffusion-2-1-base` | [`sd-research/stable-diffusion-2-1-base`](https://huggingface.co/sd-research/stable-diffusion-2-1-base) | 512 | Balanced quality and speed |
+| SDXL | `sdxl` | `models/stable-diffusion-xl-base-1.0` | [`stabilityai/stable-diffusion-xl-base-1.0`](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) | 1024 | High-quality removal and stronger visual restoration |
 
-All variants are fully compatible with community fine‑tuned models (e.g. anime, photorealistic).
+> ⚠️ Note: The SD2.1 download uses `sd-research/stable-diffusion-2-1-base` as an alternative mirror because the original `stabilityai/stable-diffusion-2-1-base` repository may be unavailable or deprecated in some environments. For strict reproducibility, users may manually place compatible Diffusers-format SD2.1 weights under `models/stable-diffusion-2-1-base`.
+
+> ✅ For the fastest reviewer check, we recommend starting with `sd15`.  
+> 🌟 For the best visual quality, we recommend using `sdxl`.
+
+---
 
 ## What's New
 
-**2026-04-03** – Full code refresh, updated requirements, GitHub sync → project fully runnable.  
+**2026-04-03** – Full code refresh, updated requirements, GitHub sync → project fully runnable.
+
+**2026-04-23** – Added Dockerfile with cuDNN support and model download shell script; fixed multiple bugs and vulnerabilities in inference code.
+
+**2026-05-02** – Added interactive Gradio demo (`app.py`) and a complete Jupyter Notebook tutorial (`ClickRemoval_Test_Tutorial.ipynb`).
+
+**2026-05-03** – Updated Docker deployment, model mounting strategy, Hugging Face model paths, and SD1.5/SD2.1/SDXL support.
+
 *More updates coming soon...*
 
-> 🚀 The tool is fully open‑source under the Apache‑2.0 license.  
-> 🔗 Repository: [https://github.com/zld-make/ClickRemoval](https://github.com/zld-make/ClickRemoval)  
-> 🐳 Docker image and live demo are also available.
+---
+
