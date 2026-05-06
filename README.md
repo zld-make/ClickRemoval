@@ -2,15 +2,43 @@
 
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 
-## docker
+## Run
 
-### docker build
-
+### Build the Docker image
 ```bash
 docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
 ```
-## environment
 
+### Download the default SD1.5 model
+You can replace sd15 with sd21, sdxl or all.
+```bash
+bash download_models.sh sd15
+```
+
+### Run the Gradio Demo
+```bash
+mkdir -p models hf_cache outputs
+
+docker run --gpus all \
+  -p 7860:7860 \
+  --name clickremoval_test \
+  -v "$(pwd)/models:/workspace/models" \
+  -v "$(pwd)/hf_cache:/root/.cache/huggingface" \
+  -v "$(pwd)/outputs:/workspace/outputs" \
+  clickremoval:cudnn
+```
+
+## Running Locally Without Docker
+### environment
+conda environment
+```bash
+conda create -n clickremoval python=3.12 -y
+conda activate clickremoval
+```
+dependencies
+```bash
+pip install -r requirements.txt
+```
 
 
 ## Qualitative Comparison
