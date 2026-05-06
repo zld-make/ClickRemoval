@@ -39,7 +39,15 @@ dependencies
 ```bash
 pip install -r requirements.txt
 ```
+Download models, You can replace sd15 with sd21, sdxl or all.
+```bash
+bash download_models.sh sd15
+```
 
+## Gradio Demo
+```bash
+python app.py --model sd15 --device cuda --port 7860
+```
 
 ## Qualitative Comparison
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
