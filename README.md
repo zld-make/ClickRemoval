@@ -5,7 +5,7 @@ ClickRemoval is a **fully open‑source, training‑free** object removal tool b
 ## docker
 
 ### docker build
-```bash
+
 docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
 
 ## environment
