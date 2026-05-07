@@ -20,7 +20,7 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 ## Progressive Click Interaction
 ClickRemoval supports progressive interaction. Users can iteratively add positive clicks to strengthen target removal and add negative clicks to protect regions that should be preserved.
 <div align="center">
-  <img src="assets/images/coord.png" alt="Progressive click interaction" width="95%">
+  <img src="assets/images/coord.png" alt="Progressive click interaction" width="60%">
   <br>
   <em>Figure: Progressive click interaction. From left to right: one positive click, two positive clicks, one positive and one negative click, and multiple corrective clicks.</em>
 </div>
