@@ -89,6 +89,14 @@ If the container name already exists, remove it first
 ```bash
 docker rm -f clickremoval_test
 ```
+## Command-line Inference
+Besides the interactive Gradio demo, ClickRemoval also provides command-line inference scripts under `inference/` for reproducible testing and batch-style usage.
+```text
+inference/
+├── inference_sd15.py
+├── inference_sd21.py
+└── inference_sdxl.py
+```
 
 ## Run Without Docker
 ### environment
