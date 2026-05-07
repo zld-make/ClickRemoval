@@ -27,7 +27,7 @@ ClickRemoval supports progressive click-based refinement while using self-attent
         <br>
         <em>Progressive click interaction</em>
       </td>
-      <td align="center" width="50%">
+      <td align="center" width="60%">
         <img src="assets/images/framework.png" alt="ClickRemoval architecture" width="420">
         <br>
         <em>ClickRemoval framework</em>
