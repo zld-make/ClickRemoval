@@ -64,16 +64,6 @@ bash download_models.sh sd15
 python app.py --model sd15 --device cuda --port 7860
 ```
 
-## Model Architecture
-
-The figure below illustrates the overall architecture of ClickRemoval, including the Attention Activation and Suppression (AAS) module and the Self-Attention Redirection Guidance (SARG) mechanism.
-
-<div align="center">
-  <img src="assets/images/framework.png" alt="ClickRemoval Architecture" width="80%">
-  <br>
-  <em>Figure: Overview of ClickRemoval. M2N2 converts user clicks into semantic maps, SGAR and SGAS redirect self-attention during denoising, and ARG blends the original and modulated predictions to control removal strength.</em>
-</div>
-
 ## Supported Backbones
 
 | Model |Hugging Face Repository | Resolution | Recommended Use |
