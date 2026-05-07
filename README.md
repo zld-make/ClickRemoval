@@ -59,9 +59,11 @@ models/
 └── stable-diffusion-xl-base-1.0/
 ```
 Container-side paths:
+```text
 /workspace/models/stable-diffusion-v1-5
 /workspace/models/stable-diffusion-2-1-base
 /workspace/models/stable-diffusion-xl-base-1.0
+```
 
 ### Run the Gradio Demo
 ```bash
