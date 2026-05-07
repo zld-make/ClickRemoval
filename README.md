@@ -6,9 +6,9 @@ ClickRemoval is a **fully open‑source, training‑free** object removal tool b
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
 
 <div align="center">
-  <img src="assets/images/coord.png" alt="Progressive click interaction" width="720">
+  <img src="assets/images/comparison.png" alt="Comparison of various models" width="95%">
   <br>
-  <em>Figure: Progressive click interaction under diverse scenarios, including large-object removal, occluded-object removal, multi-object removal, and complex-background restoration.</em>
+  <em>Figure: Visual comparison of different models. ClickRemoval removes target objects more thoroughly and restores backgrounds more naturally.</em>
 </div>
 
 ## Key Features
@@ -20,9 +20,9 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 ## Progressive Click Interaction
 ClickRemoval supports progressive interaction. Users can iteratively add positive clicks to strengthen target removal and add negative clicks to protect regions that should be preserved.
 <div align="center">
-  <img src="assets/images/coord.png" alt="Progressive click interaction" width="60%">
+  <img src="assets/images/coord.png" alt="Progressive click interaction" width="720">
   <br>
-  <em>Figure: Progressive click interaction. From left to right: one positive click, two positive clicks, one positive and one negative click, and multiple corrective clicks.</em>
+  <em>Figure: Progressive click interaction under diverse scenarios, including large-object removal, occluded-object removal, multi-object removal, and complex-background restoration.</em>
 </div>
 
 ## Model Architecture
