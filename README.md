@@ -17,26 +17,16 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 - **Click‑only interaction** – No masks, no text prompts, no training. Supports positive/negative clicks for higher precision.
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
 
-## Run
-### environment
-conda environment
-```bash
-conda create -n clickremoval python=3.12 -y
-conda activate clickremoval
-```
-dependencies
-```bash
-pip install -r requirements.txt
-```
-Download models, You can replace sd15 with sd21, sdxl or all.
+## Download models
+You can replace sd15 with sd21, sdxl or all.
 ```bash
 bash download_models.sh sd15
 ```
+## Quick Start
 ### Build the Docker image
 ```bash
 docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
 ```
-
 ### Run the Gradio Demo
 ```bash
 docker run --gpus all \
@@ -48,7 +38,19 @@ docker run --gpus all \
   clickremoval:cudnn
 ```
 
-### Gradio Demo
+## Run
+### environment
+conda environment
+```bash
+conda create -n clickremoval python=3.12 -y
+conda activate clickremoval
+```
+dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Run Gradio Demo
 ```bash
 python app.py --model sd15 --device cuda --port 7860
 ```
