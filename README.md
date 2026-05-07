@@ -76,11 +76,11 @@ The figure below illustrates the overall architecture of ClickRemoval, including
 
 ## Supported Backbones
 
-| Model | Preset | Local Directory | Hugging Face Repository | Resolution | Recommended Use |
-|-------|--------|-----------------|--------------------------|------------|-----------------|
-| SD1.5 | `sd15` | `models/stable-diffusion-v1-5` | [Download](https://huggingface.co/ledun-ai/stable-diffusion-v1-5) | 512 | Lightweight, fast demo, resource-constrained devices |
-| SD2.1 | `sd21` | `models/stable-diffusion-2-1-base` | [Download](https://huggingface.co/ledun-ai/stable-diffusion-2-1-base) | 512 | Balanced quality and speed |
-| SDXL | `sdxl` | `models/stable-diffusion-xl-base-1.0` | [Download](https://huggingface.co/ledun-ai/stable-diffusion-xl-base-1.0) | 1024 | High-quality removal and stronger visual restoration |
+| Model |Hugging Face Repository | Resolution | Recommended Use |
+|-------|-------------------------|------------|-----------------|
+| SD1.5 |[Download](https://huggingface.co/ledun-ai/stable-diffusion-v1-5) | 512 | Lightweight, fast demo, resource-constrained devices |
+| SD2.1 |[Download](https://huggingface.co/ledun-ai/stable-diffusion-2-1-base) | 512 | Balanced quality and speed |
+| SDXL  |[Download](https://huggingface.co/ledun-ai/stable-diffusion-xl-base-1.0) | 1024 | High-quality removal and stronger visual restoration |
 
 > ⚠️ Note: The SD2.1 download uses `sd-research/stable-diffusion-2-1-base` as an alternative mirror because the original `stabilityai/stable-diffusion-2-1-base` repository may be unavailable or deprecated in some environments. For strict reproducibility, users may manually place compatible Diffusers-format SD2.1 weights under `models/stable-diffusion-2-1-base`.
 
