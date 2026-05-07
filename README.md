@@ -29,7 +29,7 @@ You can replace sd15 with sd21, sdxl or all.
 bash download_models.sh sd15
 ```
 The downloaded models will be stored under: 
-```text
+```bash
 models/
 ├── stable-diffusion-v1-5/
 ├── stable-diffusion-2-1-base/
