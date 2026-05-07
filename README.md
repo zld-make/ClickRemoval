@@ -27,13 +27,7 @@ docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
 ### Download the default SD1.5 model
 You can replace sd15 with sd21, sdxl or all.
 ```bash
-mkdir -p models hf_cache outputs
-
-docker run --rm \
-  -v "$(pwd)/models:/workspace/models" \
-  -v "$(pwd)/hf_cache:/root/.cache/huggingface" \
-  clickremoval:cudnn \
-  bash -c "pip install --upgrade huggingface_hub && bash download_models.sh sd15"
+bash download_models.sh sd15
 ```
 
 ### Run the Gradio Demo
