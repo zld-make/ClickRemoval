@@ -70,7 +70,7 @@ Container-side paths:
 ```bash
 docker run --gpus all \
   -p 7860:7860 \
-  --name clickremoval_test \
+  --name clickremoval \
   -v "$(pwd)/models:/workspace/models" \
   -v "$(pwd)/hf_cache:/root/.cache/huggingface" \
   -v "$(pwd)/outputs:/workspace/outputs" \
