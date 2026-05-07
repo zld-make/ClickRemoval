@@ -39,19 +39,14 @@ By default, we recommend starting with SD1.5 for the fastest reviewer check.
 ```bash
 mkdir -p models hf_cache outputs
 
-docker run --rm \
-  -v "$(pwd)/models:/workspace/models" \
-  -v "$(pwd)/hf_cache:/root/.cache/huggingface" \
-  clickremoval:cudnn \
-  bash download_models.sh sd15
+python -m pip install -U huggingface_hub
+bash download_models.sh sd15
 ```
 You can replace sd15 with sd21, sdxl, or all.
 ```bash
-docker run --rm \
-  -v "$(pwd)/models:/workspace/models" \
-  -v "$(pwd)/hf_cache:/root/.cache/huggingface" \
-  clickremoval:cudnn \
-  bash download_models.sh all
+bash download_models.sh sd21
+bash download_models.sh sdxl
+bash download_models.sh all
 ```
 ## Model Paths
 
