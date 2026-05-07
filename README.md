@@ -17,6 +17,14 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 - **Click‑only interaction** – No masks, no text prompts, no training. Supports positive/negative clicks for higher precision.
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
 
+## Progressive Click Interaction
+ClickRemoval supports progressive interaction. Users can iteratively add positive clicks to strengthen target removal and add negative clicks to protect regions that should be preserved.
+<div align="center">
+  <img src="assets/images/coord.png" alt="Progressive click interaction" width="95%">
+  <br>
+  <em>Figure: Progressive click interaction. From left to right: one positive click, two positive clicks, one positive and one negative click, and multiple corrective clicks.</em>
+</div>
+
 ## Model Architecture
 
 The figure below illustrates the overall architecture of ClickRemoval.
