@@ -29,21 +29,19 @@ case "${1:-sd15}" in
   sd15)
     download_model "ledun-ai/stable-diffusion-v1-5" "$MODEL_ROOT/stable-diffusion-v1-5"
     ;;
+  sd21)
+    download_model "ledun-ai/stable-diffusion-2-1-base" "$MODEL_ROOT/stable-diffusion-2-1-base"
+    ;;
   sdxl)
     download_model "ledun-ai/stable-diffusion-xl-base-1.0" "$MODEL_ROOT/stable-diffusion-xl-base-1.0"
     ;;
-  sd21)
-    echo "Downloading SD2.1 from ledun-ai/stable-diffusion-2-1-base ..."
-    download_model "ledun-ai/stable-diffusion-2-1-base" "$MODEL_ROOT/stable-diffusion-2-1-base"
-    ;;
   all)
     download_model "ledun-ai/stable-diffusion-v1-5" "$MODEL_ROOT/stable-diffusion-v1-5"
-    download_model "ledun-ai/stable-diffusion-xl-base-1.0" "$MODEL_ROOT/stable-diffusion-xl-base-1.0"
-    echo "Downloading SD2.1 from ledun-ai/stable-diffusion-2-1-base ..."
     download_model "ledun-ai/stable-diffusion-2-1-base" "$MODEL_ROOT/stable-diffusion-2-1-base"
+    download_model "ledun-ai/stable-diffusion-xl-base-1.0" "$MODEL_ROOT/stable-diffusion-xl-base-1.0"
     ;;
   *)
-    echo "Usage: bash download_models.sh [sd15|sdxl|sd21|all]"
+    echo "Usage: bash download_models.sh [sd15|sd21|sdxl|all]"
     exit 1
     ;;
 esac

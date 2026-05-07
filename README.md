@@ -1,10 +1,8 @@
-# ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models
+<h1 align="center">ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models</h1>
 
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
+
 ## Qualitative Comparison
-
-
-
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
 
 <div align="center">
@@ -21,29 +19,120 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 
 ## Model Architecture
 
-The figure below illustrates the overall architecture of ClickRemoval, including the Attention Activation and Suppression (AAS) module and the Self-Attention Redirection Guidance (SARG) mechanism.
+The figure below illustrates the overall architecture of ClickRemoval.
 
 <div align="center">
   <img src="assets/images/framework.png" alt="ClickRemoval Architecture" width="80%">
   <br>
-  <em>Figure: Overall framework of ClickRemoval. The pipeline consists of a frozen Stable Diffusion U-Net, user click embeddings, and our proposed attention modulation modules (AAS and SARG).</em>
+  <em>Figure: Overall framework of ClickRemoval. Green points indicate positive clicks for removal, and red points indicate negative clicks for preservation.</em>
 </div>
 
+## Quick Start
+
+### Build the Docker image
+
+```bash
+docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
+```
+### Download models
+By default, we recommend starting with SD1.5 for the fastest reviewer check.
+```bash
+mkdir -p models hf_cache outputs
+chmod +x download_models.sh
+bash download_models.sh sd15
+```
+You can replace sd15 with sd21, sdxl, or all.
+```bash
+bash download_models.sh sd21
+bash download_models.sh sdxl
+bash download_models.sh all
+```
+## Model Paths
+
+ClickRemoval first looks for model weights under `./models`. When using Docker, the local `./models` directory is mounted into the container as `/workspace/models`.
+
+Host-side paths:
+```text
+models/
+├── stable-diffusion-v1-5/
+├── stable-diffusion-2-1-base/
+└── stable-diffusion-xl-base-1.0/
+```
+Container-side paths:
+```text
+/workspace/models/stable-diffusion-v1-5
+/workspace/models/stable-diffusion-2-1-base
+/workspace/models/stable-diffusion-xl-base-1.0
+```
+
+### Run the Gradio Demo
+```bash
+docker run --gpus all \
+  -p 7860:7860 \
+  --name clickremoval_test \
+  -v "$(pwd)/models:/workspace/models" \
+  -v "$(pwd)/hf_cache:/root/.cache/huggingface" \
+  -v "$(pwd)/outputs:/workspace/outputs" \
+  clickremoval:cudnn
+```
+Then open
+```markdown
+http://localhost:7860
+```
+If the container name already exists, remove it first
+```bash
+docker rm -f clickremoval_test
+```
+
+## Run Without Docker
+### environment
+```bash
+conda create -n clickremoval python=3.10 -y
+conda activate clickremoval
+```
+### dependencies
+```bash
+pip install -r requirements.txt
+```
+### Download models
+```bash
+chmod +x download_models.sh
+bash download_models.sh sd15
+```
+### Run Gradio Demo
+```bash
+python app.py --model sd15 --device cuda --port 7860
+```
+Then open
+```bash
+http://localhost:7860
+```
 ## Supported Backbones
 
-| Model | Steps | Use Case | Download |
-|-------|-------|----------|----------|
-| SD1.5  | 25    | Lightweight, real‑time, resource‑constrained devices | [⬇️ SD1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) |
-| SD2.1  | 50    | Balanced quality and speed | [⬇️ SD2.1](https://huggingface.co/stabilityai/stable-diffusion-2-1) |
-| SDXL   | 50    | High‑quality removal for production use | [⬇️ SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) |
+| Model | Preset | Local Directory | Hugging Face Repository | Resolution | Recommended Use |
+|-------|--------|-----------------|--------------------------|------------|-----------------|
+| SD1.5 | `sd15` | `models/stable-diffusion-v1-5` | [⬇️ SD1.5](https://huggingface.co/ledun-ai/stable-diffusion-v1-5) | 512 | Lightweight, fast demo, resource-constrained devices |
+| SD2.1 | `sd21` | `models/stable-diffusion-2-1-base` | [⬇️ SD2.1](https://huggingface.co/ledun-ai/stable-diffusion-2-1-base) | 512 | Balanced quality and speed |
+| SDXL | `sdxl` | `models/stable-diffusion-xl-base-1.0` | [⬇️ SDXL](https://huggingface.co/ledun-ai/stable-diffusion-xl-base-1.0) | 1024 | High-quality removal and stronger visual restoration |
 
-All variants are fully compatible with community fine‑tuned models (e.g. anime, photorealistic).
+> ⚠️ Note: For reproducible deployment, ClickRemoval uses the author-maintained `ledun-ai` Hugging Face repositories as the default download sources. These repositories mirror compatible Diffusers-format Stable Diffusion backbones used by ClickRemoval and are maintained to provide stable access during review and future use. Users may also manually place their own compatible Diffusers-format weights under the corresponding directories in `./models`.
+
+> ✅ For the fastest reviewer check, we recommend starting with `sd15`.  
+> 🌟 For the best visual quality, we recommend using `sdxl`.
+
+---
 
 ## What's New
 
-**2026-04-03** – Full code refresh, updated requirements, GitHub sync → project fully runnable.  
+**2026-04-03** – Full code refresh, updated requirements, GitHub sync → project fully runnable.
+
+**2026-04-23** – Added Dockerfile with cuDNN support and model download shell script; fixed multiple bugs and vulnerabilities in inference code.
+
+**2026-05-02** – Added interactive Gradio demo (`app.py`) and a complete Jupyter Notebook tutorial (`ClickRemoval_Test_Tutorial.ipynb`).
+
+**2026-05-03** – Updated Docker deployment, model mounting strategy, Hugging Face model paths, and SD1.5/SD2.1/SDXL support.
+
 *More updates coming soon...*
 
-> 🚀 The tool is fully open‑source under the Apache‑2.0 license.  
-> 🔗 Repository: [https://github.com/zld-make/ClickRemoval](https://github.com/zld-make/ClickRemoval)  
-> 🐳 Docker image and live demo are also available.
+---
+
