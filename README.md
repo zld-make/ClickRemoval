@@ -23,12 +23,12 @@ ClickRemoval supports progressive interaction. Users can iteratively add positiv
   <table>
     <tr>
       <td align="center" width="50%">
-        <img src="assets/images/coord.png" alt="Progressive click interaction" width="360">
+        <img src="assets/images/coord.png" alt="Progressive click interaction" width="420">
         <br>
         <em>Progressive click interaction</em>
       </td>
       <td align="center" width="50%">
-        <img src="assets/images/framework.png" alt="ClickRemoval architecture" width="360">
+        <img src="assets/images/framework.png" alt="ClickRemoval architecture" width="420">
         <br>
         <em>ClickRemoval framework</em>
       </td>
