@@ -18,7 +18,7 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
 
 ## Interaction and Method Overview
-ClickRemoval supports progressive interaction. Users can iteratively add positive clicks to strengthen target removal and add negative clicks to protect regions that should be preserved.
+ClickRemoval supports progressive click-based refinement while using self-attention modulation to guide object removal and background restoration.
 <div align="center">
   <table>
     <tr>
