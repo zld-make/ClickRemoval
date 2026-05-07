@@ -18,30 +18,6 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
 
 ## Run
-
-### Build the Docker image
-```bash
-docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
-```
-
-### Download the default SD1.5 model
-You can replace sd15 with sd21, sdxl or all.
-```bash
-bash download_models.sh sd15
-```
-
-### Run the Gradio Demo
-```bash
-docker run --gpus all \
-  -p 7860:7860 \
-  --name clickremoval_test \
-  -v "$(pwd)/models:/workspace/models" \
-  -v "$(pwd)/hf_cache:/root/.cache/huggingface" \
-  -v "$(pwd)/outputs:/workspace/outputs" \
-  clickremoval:cudnn
-```
-
-## Running Locally Without Docker
 ### environment
 conda environment
 ```bash
@@ -56,8 +32,23 @@ Download models, You can replace sd15 with sd21, sdxl or all.
 ```bash
 bash download_models.sh sd15
 ```
+### Build the Docker image
+```bash
+docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
+```
 
-## Gradio Demo
+### Run the Gradio Demo
+```bash
+docker run --gpus all \
+  -p 7860:7860 \
+  --name clickremoval_test \
+  -v "$(pwd)/models:/workspace/models" \
+  -v "$(pwd)/hf_cache:/root/.cache/huggingface" \
+  -v "$(pwd)/outputs:/workspace/outputs" \
+  clickremoval:cudnn
+```
+
+### Gradio Demo
 ```bash
 python app.py --model sd15 --device cuda --port 7860
 ```
