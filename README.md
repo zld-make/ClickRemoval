@@ -37,7 +37,7 @@ docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
 ### Download model weights inside Docker
 By default, we recommend starting with SD1.5 for the fastest reviewer check.
 ```bash
-mkdir -p models hf_cache outputs
+mkdir -p models outputs
 
 python -m pip install -U huggingface_hub
 bash download_models.sh sd15
