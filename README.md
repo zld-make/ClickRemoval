@@ -17,18 +17,26 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 - **Click‑only interaction** – No masks, no text prompts, no training. Supports positive/negative clicks for higher precision.
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
 
-## Download models
-You can replace sd15 with sd21, sdxl or all.
-```bash
-bash download_models.sh sd15
-```
+
 ## Quick Start
 ### Build the Docker image
 ```bash
 docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
 ```
+### Download models
+You can replace sd15 with sd21, sdxl or all.
+```bash
+bash download_models.sh sd15
+```
+The downloaded models will be stored under: 
+models/
+├── stable-diffusion-v1-5/
+├── stable-diffusion-2-1-base/
+└── stable-diffusion-xl-base-1.0/
 ### Run the Gradio Demo
 ```bash
+mkdir -p models hf_cache outputs
+
 docker run --gpus all \
   -p 7860:7860 \
   --name clickremoval_test \
@@ -37,33 +45,46 @@ docker run --gpus all \
   -v "$(pwd)/outputs:/workspace/outputs" \
   clickremoval:cudnn
 ```
-
-## Run
-### environment
-conda environment
+Then open
 ```bash
-conda create -n clickremoval python=3.12 -y
+http://localhost:7860
+```
+If the container name already exists, remove it first
+```bash
+docker rm -f clickremoval_test
+```
+
+## Run Without Docker
+### environment
+```bash
+conda create -n clickremoval python=3.10 -y
 conda activate clickremoval
 ```
-dependencies
+### dependencies
 ```bash
 pip install -r requirements.txt
 ```
-
+### Download models
+```bash
+bash download_models.sh sd15
+```
 ### Run Gradio Demo
 ```bash
 python app.py --model sd15 --device cuda --port 7860
 ```
-
+Then open
+```bash
+http://localhost:7860
+```
 ## Supported Backbones
 
-| Model |Hugging Face Repository | Resolution | Recommended Use |
-|-------|-------------------------|------------|-----------------|
-| SD1.5 |[⬇️ SD1.5](https://huggingface.co/ledun-ai/stable-diffusion-v1-5) | 512 | Lightweight, fast demo, resource-constrained devices |
-| SD2.1 |[⬇️ SD2.1](https://huggingface.co/ledun-ai/stable-diffusion-2-1-base) | 512 | Balanced quality and speed |
-| SDXL  |[⬇️ SDXL](https://huggingface.co/ledun-ai/stable-diffusion-xl-base-1.0) | 1024 | High-quality removal and stronger visual restoration |
+| Model | Preset | Local Directory | Hugging Face Repository | Resolution | Recommended Use |
+|-------|--------|-----------------|--------------------------|------------|-----------------|
+| SD1.5 | `sd15` | `models/stable-diffusion-v1-5` | [⬇️ SD1.5](https://huggingface.co/ledun-ai/stable-diffusion-v1-5) | 512 | Lightweight, fast demo, resource-constrained devices |
+| SD2.1 | `sd21` | `models/stable-diffusion-2-1-base` | [⬇️ SD2.1](https://huggingface.co/ledun-ai/stable-diffusion-2-1-base) | 512 | Balanced quality and speed |
+| SDXL | `sdxl` | `models/stable-diffusion-xl-base-1.0` | [⬇️ SDXL](https://huggingface.co/ledun-ai/stable-diffusion-xl-base-1.0) | 1024 | High-quality removal and stronger visual restoration |
 
-> ⚠️ Note: The SD2.1 download uses `sd-research/stable-diffusion-2-1-base` as an alternative mirror because the original `stabilityai/stable-diffusion-2-1-base` repository may be unavailable or deprecated in some environments. For strict reproducibility, users may manually place compatible Diffusers-format SD2.1 weights under `models/stable-diffusion-2-1-base`.
+> ⚠️ Note: For reproducible deployment, ClickRemoval uses the author-maintained `ledun-ai` Hugging Face repositories as the default download sources. These repositories mirror compatible Diffusers-format Stable Diffusion backbones used by ClickRemoval and are maintained to provide stable access during review and future use. Users may also manually place their own compatible Diffusers-format weights under the corresponding directories in `./models`.
 
 > ✅ For the fastest reviewer check, we recommend starting with `sd15`.  
 > 🌟 For the best visual quality, we recommend using `sdxl`.
