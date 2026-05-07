@@ -29,10 +29,12 @@ You can replace sd15 with sd21, sdxl or all.
 bash download_models.sh sd15
 ```
 The downloaded models will be stored under: 
+```text
 models/
 ├── stable-diffusion-v1-5/
 ├── stable-diffusion-2-1-base/
 └── stable-diffusion-xl-base-1.0/
+```
 ### Run the Gradio Demo
 ```bash
 mkdir -p models hf_cache outputs
