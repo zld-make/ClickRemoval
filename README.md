@@ -17,28 +17,54 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 - **Click‑only interaction** – No masks, no text prompts, no training. Supports positive/negative clicks for higher precision.
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
 
+## Model Architecture
+
+The figure below illustrates the overall architecture of ClickRemoval.
+
+<div align="center">
+  <img src="assets/images/framework.png" alt="ClickRemoval Architecture" width="80%">
+  <br>
+  <em>Figure: Overall framework of ClickRemoval. Green points indicate positive clicks for removal, and red points indicate negative clicks for preservation.</em>
+</div>
 
 ## Quick Start
+
 ### Build the Docker image
+
 ```bash
 docker build -f Dockerfile.cudnn -t clickremoval:cudnn .
 ```
 ### Download models
-You can replace sd15 with sd21, sdxl or all.
+By default, we recommend starting with SD1.5 for the fastest reviewer check.
 ```bash
+mkdir -p models hf_cache outputs
+chmod +x download_models.sh
 bash download_models.sh sd15
 ```
-The downloaded models will be stored under: 
+You can replace sd15 with sd21, sdxl, or all.
 ```bash
+bash download_models.sh sd21
+bash download_models.sh sdxl
+bash download_models.sh all
+```
+## Model Paths
+
+ClickRemoval first looks for model weights under `./models`. When using Docker, the local `./models` directory is mounted into the container as `/workspace/models`.
+
+Host-side paths:
+```text
 models/
 ├── stable-diffusion-v1-5/
 ├── stable-diffusion-2-1-base/
 └── stable-diffusion-xl-base-1.0/
 ```
+Container-side paths:
+/workspace/models/stable-diffusion-v1-5
+/workspace/models/stable-diffusion-2-1-base
+/workspace/models/stable-diffusion-xl-base-1.0
+
 ### Run the Gradio Demo
 ```bash
-mkdir -p models hf_cache outputs
-
 docker run --gpus all \
   -p 7860:7860 \
   --name clickremoval_test \
@@ -48,7 +74,7 @@ docker run --gpus all \
   clickremoval:cudnn
 ```
 Then open
-```bash
+```markdown
 http://localhost:7860
 ```
 If the container name already exists, remove it first
@@ -68,6 +94,7 @@ pip install -r requirements.txt
 ```
 ### Download models
 ```bash
+chmod +x download_models.sh
 bash download_models.sh sd15
 ```
 ### Run Gradio Demo
