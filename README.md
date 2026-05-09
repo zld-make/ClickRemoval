@@ -80,6 +80,14 @@ Then open
 ```markdown
 http://localhost:7860
 ```
+```markdown
+### Low VRAM Option
+
+In the Gradio interface, the **Low VRAM** option is disabled by default.  
+Keeping it disabled usually provides faster inference.
+
+If you run the SDXL version and encounter CUDA out-of-memory errors, please enable **Low VRAM** in the interface. This option reduces GPU memory usage at the cost of slower inference.
+```
 If the container name already exists, remove it first
 ```bash
 docker rm -f clickremoval
