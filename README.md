@@ -84,7 +84,6 @@ If the container name already exists, remove it first
 ```bash
 docker rm -f clickremoval
 ```
-```markdown
 ### Low VRAM Option
 
 In the Gradio interface, the **Low VRAM** option is disabled by default.  
