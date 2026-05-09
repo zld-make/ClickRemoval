@@ -82,7 +82,7 @@ http://localhost:7860
 ```
 If the container name already exists, remove it first
 ```bash
-docker rm -f clickremoval_test
+docker rm -f clickremoval
 ```
 ## Command-line Inference
 Besides the interactive Gradio demo, ClickRemoval also provides command-line inference scripts under `inference/` for reproducible testing and batch-style usage.
