@@ -123,6 +123,12 @@ Then open
 ```bash
 http://localhost:7860
 ```
+
+## Hardware Requirements
+For GPU inference, we strongly recommend using an NVIDIA GPU with **at least 24GB VRAM**, such as an RTX 3090 or RTX 4090. This is especially important when running the SDXL backbone at 1024 resolution.
+
+Lower-VRAM GPUs may work for SD1.5 or SD2.1, but SDXL may require enabling the **Low VRAM** option in the Gradio interface. If CUDA out-of-memory errors occur, please enable **Low VRAM** or use the SD1.5 preset for a faster and lighter test.
+
 ## Supported Backbones
 
 | Model | Preset | Local Directory | Hugging Face Repository | Resolution | Recommended Use |
