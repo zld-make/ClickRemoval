@@ -3,13 +3,11 @@ einops
 omegaconf
 diffusers
 opencv-python
-pytorch_lightning
+pytorch-lightning
 transformers
 matplotlib
 accelerate
-torchvision
 numba
 kornia
-accelerate
 gradio
 pillow

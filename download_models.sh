@@ -10,19 +10,17 @@ download_model () {
   local repo_id="$1"
   local local_dir="$2"
 
-  if [ -d "$local_dir" ] && [ "$(ls -A "$local_dir" 2>/dev/null)" ]; then
-    echo "Model already exists at $local_dir. Skipping."
-  else
-    echo "Downloading $repo_id to $local_dir ..."
-    python - <<PY
+   echo "Checking / resuming download: $repo_id to $local_dir ..."
+   python - <<PY
 from huggingface_hub import snapshot_download
 snapshot_download(
     repo_id="$repo_id",
     local_dir="$local_dir",
-    local_dir_use_symlinks=False
+    local_dir_use_symlinks=False,
+    resume_download=True,
+    force_download=False
 )
 PY
-  fi
 }
 
 case "${1:-sd15}" in
