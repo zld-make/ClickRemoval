@@ -12,6 +12,11 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
   <br>
   <em>Figure: Visual comparison of different models. ClickRemoval removes target objects more thoroughly and restores backgrounds more naturally.</em>
 </div>
+<div align="center">
+  <img src="assets/images/comparison1.png" alt="Comparison of various models" width="95%">
+  <br>
+  <em>Figure: Visual comparison of different models. ClickRemoval removes target objects more thoroughly and restores backgrounds more naturally.</em>
+</div>
 
 ## Key Features
 
