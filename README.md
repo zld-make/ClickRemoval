@@ -2,21 +2,21 @@
 
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 
-<div style="display: flex; flex-wrap: wrap; margin: 20px 0;">
-  <div style="width: 33.333%; text-align: center; margin-bottom: 20px;">
-    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene1.gif" style="width: 90%; max-width: 300px; border-radius: 8px;" alt="Scene 1">
+<div style="display: flex; overflow-x: auto; margin: 20px 0;">
+  <div style="flex: 0 0 25%; text-align: center; padding: 0 5px;">
+    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene1.gif" style="width: 100%; max-width: 300px; border-radius: 8px;" alt="Scene 1">
     <br><em>Scene 1: Object removal</em>
   </div>
-  <div style="width: 33.333%; text-align: center; margin-bottom: 20px;">
-    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene2.gif" style="width: 90%; max-width: 300px; border-radius: 8px;" alt="Scene 2">
+  <div style="flex: 0 0 25%; text-align: center; padding: 0 5px;">
+    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene2.gif" style="width: 100%; max-width: 300px; border-radius: 8px;" alt="Scene 2">
     <br><em>Scene 2: Person removal</em>
   </div>
-  <div style="width: 33.333%; text-align: center; margin-bottom: 20px;">
-    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene3.gif" style="width: 90%; max-width: 300px; border-radius: 8px;" alt="Scene 3">
+  <div style="flex: 0 0 25%; text-align: center; padding: 0 5px;">
+    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene3.gif" style="width: 100%; max-width: 300px; border-radius: 8px;" alt="Scene 3">
     <br><em>Scene 3: Logo removal</em>
   </div>
-  <div style="width: 33.333%; text-align: center; margin-bottom: 20px;">
-    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene4.gif" style="width: 90%; max-width: 300px; border-radius: 8px;" alt="Scene 4">
+  <div style="flex: 0 0 25%; text-align: center; padding: 0 5px;">
+    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene4.gif" style="width: 100%; max-width: 300px; border-radius: 8px;" alt="Scene 4">
     <br><em>Scene 4: Graffiti removal</em>
   </div>
 </div>
