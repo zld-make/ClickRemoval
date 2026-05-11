@@ -2,6 +2,25 @@
 
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin: 20px 0;">
+  <div style="flex: 1; min-width: 200px; text-align: center;">
+    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/refs/heads/main/scene1.gif" width="100%" alt="Scene 1 GIF">
+    <br><em>Scene 1: Object removal</em>
+  </div>
+  <div style="flex: 1; min-width: 200px; text-align: center;">
+    <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene2.gif?raw=true" width="100%" alt="Scene 2 GIF">
+    <br><em>Scene 2: Person removal</em>
+  </div>
+  <div style="flex: 1; min-width: 200px; text-align: center;">
+    <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene3.gif?raw=true" width="100%" alt="Scene 3 GIF">
+    <br><em>Scene 3: Logo removal</em>
+  </div>
+  <div style="flex: 1; min-width: 200px; text-align: center;">
+    <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene4.gif?raw=true" width="100%" alt="Scene 4 GIF">
+    <br><em>Scene 4: Graffiti removal</em>
+  </div>
+</div>
+
 ## Qualitative Comparison
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
 
