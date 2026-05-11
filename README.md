@@ -2,18 +2,14 @@
 
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 
-<img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/combined.gif" width="100%" alt="Four scenes combined">
+<img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/combined.gif?raw=true" width="100%" alt="Four scenes combined">
+<img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/combined1.gif?raw=true" width="100%" alt="Four scenes combined">
 
 ## Qualitative Comparison
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
 
 <div align="center">
   <img src="assets/images/comparison.png" alt="Comparison of various models" width="95%">
-  <br>
-  <em>Figure: Visual comparison of different models. ClickRemoval removes target objects more thoroughly and restores backgrounds more naturally.</em>
-</div>
-<div align="center">
-  <img src="assets/images/comparison1.png" alt="Comparison of various models" width="95%">
   <br>
   <em>Figure: Visual comparison of different models. ClickRemoval removes target objects more thoroughly and restores backgrounds more naturally.</em>
 </div>
