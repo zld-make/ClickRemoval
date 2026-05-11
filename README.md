@@ -2,33 +2,6 @@
 
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 
-<div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin: 20px 0;">
-  <div style="flex: 1; min-width: 200px; text-align: center;">
-    <video width="100%" autoplay muted loop playsinline>
-      <source src="https://github.com/zld-make/ClickRemoval/releases/download/Demo_videos_WIP/004939_input.mp4" type="video/mp4">
-    </video>
-    <br><em>Scene 1: Object removal</em>
-  </div>
-  <div style="flex: 1; min-width: 200px; text-align: center;">
-    <video width="100%" autoplay muted loop playsinline>
-      <source src="https://github.com/zld-make/ClickRemoval/releases/download/Demo_videos_WIP/44.mp4" type="video/mp4">
-    </video>
-    <br><em>Scene 2: Person removal</em>
-  </div>
-  <div style="flex: 1; min-width: 200px; text-align: center;">
-    <video width="100%" autoplay muted loop playsinline>
-      <source src="https://github.com/zld-make/ClickRemoval/releases/download/Demo_videos_WIP/001273_input.mp4" type="video/mp4">
-    </video>
-    <br><em>Scene 3: Logo removal</em>
-  </div>
-  <div style="flex: 1; min-width: 200px; text-align: center;">
-    <video width="100%" autoplay muted loop playsinline>
-      <source src="https://github.com/zld-make/ClickRemoval/releases/download/Demo_videos_WIP/001729_input.mp4" type="video/mp4">
-    </video>
-    <br><em>Scene 4: Graffiti removal</em>
-  </div>
-</div>
-
 ## Qualitative Comparison
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
 
