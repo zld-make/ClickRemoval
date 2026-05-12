@@ -3,10 +3,9 @@
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene1.gif" width="22%"> 
-  <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene2.gif" width="22%"> 
-  <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene3.gif" width="22%"> 
-  <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene4.gif" width="22%">
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene1_unified.gif?raw=true" width="22%"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene2_unified.gif?raw=true" width="22%"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene3_unified.gif?raw=true" width="22%">
 </p>
 <br>
 <em align="center">Scene 1: Object removal | Scene 2: Person removal | Scene 3: Logo removal | Scene 4: Graffiti removal</em>
