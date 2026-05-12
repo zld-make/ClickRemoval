@@ -2,8 +2,24 @@
 
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 
-<img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/combined.gif?raw=true" width="100%" alt="Four scenes combined">
-<img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/combined1.gif?raw=true" width="100%" alt="Four scenes combined">
+<div style="display: flex; flex-wrap: nowrap; justify-content: center; gap: 10px; background: white; padding: 10px 0;">
+  <div style="flex: 1;">
+    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene1.gif" style="width: 100%; object-fit: contain; background: white;" alt="Scene 1">
+    <br><em>Scene 1: Object removal</em>
+  </div>
+  <div style="flex: 1;">
+    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene2.gif" style="width: 100%; object-fit: contain; background: white;" alt="Scene 2">
+    <br><em>Scene 2: Person removal</em>
+  </div>
+  <div style="flex: 1;">
+    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene3.gif" style="width: 100%; object-fit: contain; background: white;" alt="Scene 3">
+    <br><em>Scene 3: Logo removal</em>
+  </div>
+  <div style="flex: 1;">
+    <img src="https://raw.githubusercontent.com/zld-make/ClickRemoval-Images/main/scene4.gif" style="width: 100%; object-fit: contain; background: white;" alt="Scene 4">
+    <br><em>Scene 4: Graffiti removal</em>
+  </div>
+</div>
 
 ## Qualitative Comparison
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
