@@ -8,6 +8,12 @@ ClickRemoval is a **fully open‑source, training‑free** object removal tool b
   <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene4_unified.gif?raw=true" width="33%" style="vertical-align: top;">
 </p>
 
+<p align="center">
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene2_unified.gif?raw=true" width="33%" style="vertical-align: top;"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene5_unified.gif?raw=true" width="33%" style="vertical-align: top;"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene6_unified.gif?raw=true" width="33%" style="vertical-align: top;">
+</p>
+
 ## Qualitative Comparison
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
 
