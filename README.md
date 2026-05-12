@@ -32,9 +32,9 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 ## Interaction and Method Overview
 ClickRemoval supports progressive click-based refinement while using self-attention modulation to guide object removal and background restoration.
 <div align="center">
-  <img src="assets/images/framework.png" alt="ClickRemoval architecture" width="440">
+  <img src="assets/images/framework.png" alt="ClickRemoval architecture" width="70%">
   <br>
-  <em>Left: Progressive click interaction across representative object removal scenarios. Right: Overall framework of ClickRemoval.</em>
+  <em>Overall framework of ClickRemoval.</em>
 </div>
 
 ## Quick Start
