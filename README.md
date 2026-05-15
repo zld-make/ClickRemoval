@@ -3,13 +3,13 @@
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2605.14461">
+  <a href="https://arxiv.org/abs/2605.14461" style="text-decoration: none;">
     <img src="https://img.shields.io/badge/ClickRemoval-arXiv-B31B1B?logo=arxiv&logoColor=white&labelColor=181717" alt="arXiv">
   </a>
-  <a href="https://huggingface.co/ledun-ai">
+  <a href="https://huggingface.co/ledun-ai" style="text-decoration: none;">
     <img src="https://img.shields.io/badge/Hugging Face Models-FF9A00?logo=huggingface&logoColor=white" alt="Hugging Face Models">
   </a>
-  <a href="https://github.com/zld-make/ClickRemoval/">
+  <a href="https://github.com/zld-make/ClickRemoval/" style="text-decoration: none;">
     <img src="https://img.shields.io/github/stars/zld-make/ClickRemoval?style=social" alt="GitHub stars">
   </a>
   <img src="https://img.shields.io/badge/ModelScope%20Demo-coming%20soon-lightgrey?logo=modelscope&logoColor=white" alt="ModelScope Demo (coming soon)">
