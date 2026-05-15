@@ -7,7 +7,7 @@ ClickRemoval is a **fully open‑source, training‑free** object removal tool b
     <img src="https://img.shields.io/badge/ClickRemoval-arXiv-B31B1B?logo=arxiv&logoColor=white&labelColor=181717" alt="arXiv">
   </a>
   <a href="https://huggingface.co/ledun-ai">
-    <img src="https://img.shields.io/badge/🤗%20Hugging Face Models-FF9A00?logo=huggingface&logoColor=white" alt="Hugging Face Models">
+    <img src="https://img.shields.io/badge/Hugging Face Models-FF9A00?logo=huggingface&logoColor=white" alt="Hugging Face Models">
   </a>
   <a href="https://github.com/zld-make/ClickRemoval/">
     <img src="https://img.shields.io/github/stars/zld-make/ClickRemoval?style=social" alt="GitHub stars">
