@@ -16,10 +16,10 @@ ClickRemoval is a **fully open‑source, training‑free** object removal tool b
 </p>
 
 <p align="center">
-  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene2_unified.gif?raw=true" width="20%" style="vertical-align: top;"> 
-  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene5_unified.gif?raw=true" width="20%" style="vertical-align: top;"> 
-  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene6_unified.gif?raw=true" width="20%" style="vertical-align: top;">
-  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene7_unified.gif?raw=true" width="20%" style="vertical-align: top;">
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene2_unified.gif?raw=true" width="22%" style="vertical-align: top;"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene5_unified.gif?raw=true" width="22%" style="vertical-align: top;"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene6_unified.gif?raw=true" width="22%" style="vertical-align: top;">
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene7_unified.gif?raw=true" width="22%" style="vertical-align: top;">
 </p>
 
 ## Qualitative Comparison
