@@ -3,15 +3,19 @@
 ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2605.14461">
-    <img src="https://img.shields.io/badge/arXiv-2605.14461-B31B1B?logo=arxiv&logoColor=white" alt="ClickRemoval">
+  <a href="https://github.com/zld-make/ClickRemoval/">
+    <img src="https://img.shields.io/badge/ClickRemoval-181717?logo=github&logoColor=white" alt="ClickRemoval">
   </a>
-  <a href="https://huggingface.co/ledun-ai/stable-diffusion-v1-5">
-    <img src="https://img.shields.io/badge/🤗%20Diffusers-FF9A00?logo=huggingface&logoColor=white" alt="Diffusers">
+  <a href="https://arxiv.org/abs/2605.14461">
+    <img src="https://img.shields.io/badge/arXiv-2605.14461-B31B1B?logo=arxiv&logoColor=white" alt="arXiv">
+  </a>
+  <a href="https://huggingface.co/ledun-ai">
+    <img src="https://img.shields.io/badge/🤗%20Space-FF9A00?logo=huggingface&logoColor=white" alt="Hugging Face Models">
   </a>
   <a href="https://github.com/zld-make/ClickRemoval/">
     <img src="https://img.shields.io/github/stars/zld-make/ClickRemoval?style=social" alt="GitHub stars">
   </a>
+  <img src="https://img.shields.io/badge/ModelScope%20Demo-coming%20soon-lightgrey?logo=modelscope&logoColor=white" alt="ModelScope Demo (coming soon)">
 </p>
 
 <p align="center">
