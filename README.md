@@ -4,7 +4,7 @@ ClickRemoval is a **fully open‑source, training‑free** object removal tool b
 
 <p align="center">
   <a href="https://arxiv.org/abs/2605.14461">
-    <img src="https://img.shields.io/badge/arXiv-2605.14461-B31B1B?logo=arxiv&logoColor=white" alt="arXiv">
+    <img src="https://img.shields.io/badge/arXiv-2605.14461-B31B1B?logo=arxiv&logoColor=white" alt="ClickRemoval">
   </a>
   <a href="https://huggingface.co/ledun-ai/stable-diffusion-v1-5">
     <img src="https://img.shields.io/badge/🤗%20Diffusers-FF9A00?logo=huggingface&logoColor=white" alt="Diffusers">
