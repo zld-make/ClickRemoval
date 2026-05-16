@@ -34,7 +34,7 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 ## Key Features
 
 - **Plug‑and‑play** – Works with any Stable Diffusion model that contains self‑attention layers (SD1.5, SD2.1, SDXL, and their fine‑tuned variants).
-- **Click‑only interaction** – No masks, no text prompts, no training. Supports positive/negative clicks for higher precision.
+- **Click‑only interaction** – No masks, no text prompts, no training. Supports positive and negative clicks for higher precision.
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
 
 ## Quick Start
