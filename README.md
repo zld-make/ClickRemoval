@@ -33,9 +33,11 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 
 ## Key Features
 
-- **Plug‑and‑play** – Works with any Stable Diffusion model that contains self‑attention layers (SD1.5, SD2.1, SDXL, and their fine‑tuned variants).
-- **Click‑only interaction** – No masks, no text prompts, no training. Supports positive and negative clicks for higher precision.
-- **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
+- **Easy deployment** – ClickRemoval supports SD1.5, SD2.1, SDXL, and compatible fine-tuned Stable Diffusion backbones without additional training.
+- **Mask-free and prompt-free interaction** – Users remove objects by clicking on the image, without drawing masks or writing text descriptions.
+- **Positive/negative click refinement** – Positive clicks specify the object or region to be removed. Negative clicks specify regions that should be kept unchanged. This is useful when the target object is close to other objects, partially occluded, or visually similar to surrounding regions.
+- **Interactive Gradio demo** – The released demo allows users to upload an image, place clicks, choose a backbone, adjust inference options, and obtain the restored image directly.
+- **Complete open-source package** – The repository includes source code, Docker configuration, model download scripts, example images, documentation, and evaluation utilities.
 
 ## Quick Start
 
