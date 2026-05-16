@@ -62,20 +62,6 @@ bash download_models.sh all
 
 ClickRemoval first looks for model weights under `./models`. When using Docker, the local `./models` directory is mounted into the container as `/workspace/models`.
 
-Host-side paths:
-```text
-models/
-├── stable-diffusion-v1-5/
-├── stable-diffusion-2-1-base/
-└── stable-diffusion-xl-base-1.0/
-```
-Container-side paths:
-```text
-/workspace/models/stable-diffusion-v1-5
-/workspace/models/stable-diffusion-2-1-base
-/workspace/models/stable-diffusion-xl-base-1.0
-```
-
 ### Run the Gradio Demo
 ```bash
 docker run --gpus all \
