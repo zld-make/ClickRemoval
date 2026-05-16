@@ -37,14 +37,6 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 - **Click‑only interaction** – No masks, no text prompts, no training. Supports positive/negative clicks for higher precision.
 - **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
 
-## Interaction and Method Overview
-ClickRemoval supports progressive click-based refinement while using self-attention modulation to guide object removal and background restoration.
-<div align="center">
-  <img src="assets/images/framework.png" alt="ClickRemoval architecture" width="70%">
-  <br>
-  <em>Overall framework of ClickRemoval.</em>
-</div>
-
 ## Quick Start
 
 ### Build the Docker image
