@@ -142,7 +142,7 @@ Lower-VRAM GPUs may work for SD1.5 or SD2.1, but SDXL may require enabling the *
 
 ## Citation
 If you find this work useful, please cite the paper:
-```text
+```bibtex
 @misc{zhang2026clickremovalinteractiveopensourcetool,
       title={ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models}, 
       author={Ledun Zhang and Yatu Ji and Xufei Zhuang and Xinying Yao},
