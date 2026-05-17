@@ -140,6 +140,20 @@ Lower-VRAM GPUs may work for SD1.5 or SD2.1, but SDXL may require enabling the *
 > ✅ For the fastest reviewer check, we recommend starting with `sd15`.  
 > 🌟 For the best visual quality, we recommend using `sdxl`.
 
+## Citation
+If you find this work useful, please cite the paper:
+```text
+@misc{zhang2026clickremovalinteractiveopensourcetool,
+      title={ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models}, 
+      author={Ledun Zhang and Yatu Ji and Xufei Zhuang and Xinying Yao},
+      year={2026},
+      eprint={2605.14461},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2605.14461}, 
+}
+```
+
 ---
 
 ## What's New
