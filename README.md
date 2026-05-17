@@ -1,6 +1,6 @@
 <h1 align="center">ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models</h1>
 
-ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
+ClickRemoval is a **fully open‑source, training‑free tool** for **click‑driven** object removal.
 
 <p align="center">
   <a href="https://arxiv.org/abs/2605.14461"><img src="https://img.shields.io/badge/ClickRemoval-arXiv-B31B1B?logo=arxiv&logoColor=red&labelColor=666666" alt="arXiv"></a>&nbsp;
