@@ -1,6 +1,26 @@
 <h1 align="center">ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models</h1>
 
-ClickRemoval is a **fully open‑source, training‑free** object removal tool built on pretrained latent diffusion models (Stable Diffusion).
+ClickRemoval is a **fully open‑source, training‑free tool** for **click‑driven** object removal.
+
+<p align="center">
+  <a href="https://arxiv.org/abs/2605.14461"><img src="https://img.shields.io/badge/ClickRemoval-arXiv-B31B1B?logo=arxiv&logoColor=red&labelColor=666666" alt="arXiv"></a>&nbsp;
+  <a href="https://huggingface.co/ledun-ai"><img src="https://img.shields.io/badge/Hugging Face-Models-FF9A00?logo=huggingface&logoColor=yellow" alt="Hugging Face Models"></a>&nbsp;
+  <img src="https://img.shields.io/badge/ModelScope%20Demo-coming%20soon-lightgrey?logo=modelscope&logoColor=white" alt="ModelScope Demo (coming soon)">
+  <a href="https://github.com/zld-make/ClickRemoval/"><img src="https://img.shields.io/github/stars/zld-make/ClickRemoval?style=social" alt="GitHub stars"></a>&nbsp;
+</p>
+
+<p align="center">
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene1_unified.gif?raw=true" width="30%" style="vertical-align: top;"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene3_unified.gif?raw=true" width="30%" style="vertical-align: top;"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene4_unified.gif?raw=true" width="30%" style="vertical-align: top;">
+</p>
+
+<p align="center">
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene2_unified.gif?raw=true" width="23%" style="vertical-align: top;"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene5_unified.gif?raw=true" width="23%" style="vertical-align: top;"> 
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene6_unified.gif?raw=true" width="23%" style="vertical-align: top;">
+  <img src="https://github.com/zld-make/ClickRemoval-Images/blob/main/scene7_unified.gif?raw=true" width="23%" style="vertical-align: top;">
+</p>
 
 ## Qualitative Comparison
 The figure below compares ClickRemoval with several baseline methods (e.g., LaMa, SD-Inpaint, etc.) on object removal tasks.
@@ -13,19 +33,11 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
 
 ## Key Features
 
-- **Plug‑and‑play** – Works with any Stable Diffusion model that contains self‑attention layers (SD1.5, SD2.1, SDXL, and their fine‑tuned variants).
-- **Click‑only interaction** – No masks, no text prompts, no training. Supports positive/negative clicks for higher precision.
-- **Innovative attention modulation** – SGAR & SGAS unify localisation and inpainting in a single forward pass, avoiding error accumulation of multi‑stage systems.
-
-## Interaction and Method Overview
-ClickRemoval supports progressive click-based refinement while using self-attention modulation to guide object removal and background restoration.
-<div align="center">
-  <img src="assets/images/coord.png" alt="Progressive click interaction" width="360">
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/images/framework.png" alt="ClickRemoval architecture" width="440">
-  <br>
-  <em>Left: Progressive click interaction across representative object removal scenarios. Right: Overall framework of ClickRemoval.</em>
-</div>
+- **Easy deployment** – ClickRemoval supports SD1.5, SD2.1, SDXL, and compatible fine-tuned Stable Diffusion backbones without additional training.
+- **Mask-free and prompt-free interaction** – Users remove objects by clicking on the image, without drawing masks or writing text descriptions.
+- **Positive/negative click refinement** – Positive clicks specify the object or region to be removed. Negative clicks specify regions that should be kept unchanged. This is useful when the target object is close to other objects, partially occluded, or visually similar to surrounding regions.
+- **Interactive Gradio demo** – The released demo allows users to upload an image, place clicks, choose a backbone, adjust inference options, and obtain the restored image directly.
+- **Complete open-source package** – The repository includes source code, Docker configuration, model download scripts, example images, documentation, and evaluation utilities.
 
 ## Quick Start
 
@@ -51,20 +63,6 @@ bash download_models.sh all
 ## Model Paths
 
 ClickRemoval first looks for model weights under `./models`. When using Docker, the local `./models` directory is mounted into the container as `/workspace/models`.
-
-Host-side paths:
-```text
-models/
-├── stable-diffusion-v1-5/
-├── stable-diffusion-2-1-base/
-└── stable-diffusion-xl-base-1.0/
-```
-Container-side paths:
-```text
-/workspace/models/stable-diffusion-v1-5
-/workspace/models/stable-diffusion-2-1-base
-/workspace/models/stable-diffusion-xl-base-1.0
-```
 
 ### Run the Gradio Demo
 ```bash
@@ -141,6 +139,20 @@ Lower-VRAM GPUs may work for SD1.5 or SD2.1, but SDXL may require enabling the *
 
 > ✅ For the fastest reviewer check, we recommend starting with `sd15`.  
 > 🌟 For the best visual quality, we recommend using `sdxl`.
+
+## Citation
+If you find this work useful, please cite the paper:
+```bibtex
+@misc{zhang2026clickremovalinteractiveopensourcetool,
+      title={ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models}, 
+      author={Ledun Zhang and Yatu Ji and Xufei Zhuang and Xinying Yao},
+      year={2026},
+      eprint={2605.14461},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2605.14461}, 
+}
+```
 
 ---
 
