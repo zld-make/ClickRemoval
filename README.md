@@ -5,7 +5,6 @@ ClickRemoval is a **fully open‑source, training‑free tool** for **click‑dr
 <p align="center">
   <a href="https://arxiv.org/abs/2605.14461"><img src="https://img.shields.io/badge/ClickRemoval-arXiv-B31B1B?logo=arxiv&logoColor=red&labelColor=666666" alt="arXiv"></a>&nbsp;
   <a href="https://huggingface.co/ledun-ai"><img src="https://img.shields.io/badge/Hugging Face-Models-FF9A00?logo=huggingface&logoColor=yellow" alt="Hugging Face Models"></a>&nbsp;
-  <img src="https://img.shields.io/badge/ModelScope%20Demo-coming%20soon-lightgrey?logo=modelscope&logoColor=white" alt="ModelScope Demo (coming soon)">
   <a href="https://github.com/zld-make/ClickRemoval/"><img src="https://img.shields.io/github/stars/zld-make/ClickRemoval?style=social" alt="GitHub stars"></a>&nbsp;
 </p>
 
