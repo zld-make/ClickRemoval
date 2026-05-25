@@ -30,14 +30,6 @@ The figure below compares ClickRemoval with several baseline methods (e.g., LaMa
   <em>Figure: Visual comparison of different models. ClickRemoval removes target objects more thoroughly and restores backgrounds more naturally.</em>
 </div>
 
-## Key Features
-
-- **Easy deployment** – ClickRemoval supports SD1.5, SD2.1, SDXL, and compatible fine-tuned Stable Diffusion backbones without additional training.
-- **Mask-free and prompt-free interaction** – Users remove objects by clicking on the image, without drawing masks or writing text descriptions.
-- **Positive/negative click refinement** – Positive clicks specify the object or region to be removed. Negative clicks specify regions that should be kept unchanged. This is useful when the target object is close to other objects, partially occluded, or visually similar to surrounding regions.
-- **Interactive Gradio demo** – The released demo allows users to upload an image, place clicks, choose a backbone, adjust inference options, and obtain the restored image directly.
-- **Complete open-source package** – The repository includes source code, Docker configuration, model download scripts, example images, documentation, and evaluation utilities.
-
 ## Quick Start
 
 ### Build the Docker image
