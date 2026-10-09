@@ -2,6 +2,8 @@
 
 ClickRemoval is a **fully open‑source, training‑free tool** for **click‑driven** object removal.
 
+<p align="center"><b>🎉 Accepted at ACM Multimedia 2026 (OSS Program). Proceedings to appear.</b></p>
+
 <p align="center">
   <a href="https://arxiv.org/abs/2605.14461"><img src="https://img.shields.io/badge/ClickRemoval-arXiv-B31B1B?logo=arxiv&logoColor=red&labelColor=666666" alt="arXiv"></a>&nbsp;
   <a href="https://huggingface.co/ledun-ai"><img src="https://img.shields.io/badge/Hugging Face-Models-FF9A00?logo=huggingface&logoColor=yellow" alt="Hugging Face Models"></a>&nbsp;
