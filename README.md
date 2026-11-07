@@ -1,4 +1,4 @@
-<h1 align="center">ClickRemoval: An Interactive Open-Source Tool for Object Removal in Diffusion Models</h1>
+<h1 align="center">ClickRemoval: An Interactive Open-Source Tool for Object Removal with Diffusion Models</h1>
 
 ClickRemoval is a **fully open‑source, training‑free tool** for **click‑driven** object removal.
 
